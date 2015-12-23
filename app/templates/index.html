@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+	<canvas id="netBackground" style="border:0px solid #000000;position:absolute;top:0px;left:0px;">You might not support Canvas</canvas>
+	<style>
+		canvas {
+		    padding-left: 0;
+		    padding-right: 0;
+		    margin-left: auto;
+		    margin-right: auto;
+		    display: block;
+		    z-index:-1;
+		}
+	</style>
+	
+	<div class="row">
+	<div class="col-md-4 col-md-offset-4">
+	<input type="text" class="form-control" id="textfield" style="margin-top:38vh"></input>
+	</div>
+	</div>
+	
+	<script type="text/javascript">
+		// Paint!
+		var c = document.getElementById("netBackground");
+		var ctx = c.getContext("2d");
+		ctx.canvas.width  = window.innerWidth - 0;
+  		ctx.canvas.height = window.innerHeight - 0;
+  		center_x = ctx.canvas.width/2;
+  		center_y = ctx.canvas.height/2;
+  		ctx.strokeStyle = "#0000FF";
+  		ctx.fillStyle = "#0000FF";
+		ctx.beginPath();
+		ctx.arc(center_x,center_y,50,0,2*Math.PI);
+		ctx.fill();
+		ctx.stroke();
+		ctx.moveTo(center_x-200,center_y-100);
+		ctx.lineTo(center_x+200,center_y+100);
+		ctx.stroke();
+		ctx.moveTo(center_x+200,center_y-100);
+		ctx.lineTo(center_x-200,center_y+100);
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.arc(center_x+200,center_y+100,25,0,2*Math.PI);
+		ctx.fill();
+		ctx.stroke();
+	</script>
+{% endblock %}

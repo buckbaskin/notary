@@ -1,0 +1,58 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+	{% if trace %}
+		<table class="table">
+			<tr valign="top">
+				<td style="width:88px;"><img src="{{ trace.avatar(64) }}" width="64px" height="64px"></td>
+				<td>
+				<h1>Trace {{ trace.id }}</h1>
+					{% if trace.start %}
+						started {{ trace.start }}
+					{% endif %}
+				</td>
+				{% if not pages %}
+				<td>
+				<h1>
+					<a href="{{ url_for('show_trace', page=1, trace=trace.serialize()) }}">View Path</a>
+				</h1>
+				</td>
+				{% endif %}
+			</tr>
+		</table>
+	    <hr>
+		{% if pages %}
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<div class="page-header row" style="text-align:center;margin-top:0px;">
+				{% if pages.has_prev %}
+					<div class="col-md-2">
+						<a href="{{ url_for('show_trace', page=pages.prev_num, trace=trace.serialize()) }}">
+							<h2>Newer</h2>
+						</a>
+						</div>
+					<div class="col-md-8"><h1>Latest Path</h1></div>
+				{% else %}
+					<div class="col-md-8 col-md-offset-2"><h1>Latest Path</h1></div>
+				{% endif %}
+				{% if pages.has_next %}
+					<div class="col-md-2">
+						<a href="{{ url_for('show_trace', page=pages.next_num, trace=trace.serialize()) }}">
+							<h2>Older</h2>
+						</a>
+					</div>
+				{% endif %}
+			</div>
+			<table class="table">
+			{% for page in pages.items %}
+				{% include 'trace.html' %}
+			{% endfor %}
+			</table>
+		</div>
+		{% endif %}
+	{% else %}
+    	<h1>Trace not found</h1>
+    {% endif %}
+    
+{% endblock %}

@@ -1,0 +1,6 @@
+<tr>
+{% if page %}
+<td><img src="{{ page.avatar(32) }}" width="32px" height="32px"></td>
+{% endif %}
+<td> at {{ page.time }} visited:<br>{{ page.page_id }}</td>
+</tr>

@@ -1,0 +1,14 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Create User</h1>
+	<form name="create">
+	    <p>
+	    <!-- form needs AngularJS bindings -->
+	        Please enter your Twitter Username<br>
+	        <input type="text" class="form-control">
+	    </p>
+	    <p><input type="submit" value="Create" class="btn btn-default"></p>
+	</form>
+{% endblock %}

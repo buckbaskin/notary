@@ -1,0 +1,31 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+	{% if vm['user'].t_screen_name %}
+		<table>
+			<tr valign="top">
+				<td><img src="{{ vm['user'].avatar(64) }}" width="64px" height="64px"></td>
+				<td>
+					<h1>{{ vm['user'].t_screen_name }}</h1>
+					{% if vm['user'].description %}
+						{{ vm['user'].description }}
+					{% endif %}<br>
+					{% if vm['user'].last_updated %}
+						last updated {{ vm['user'].last_updated }}
+					{% endif %}
+				</td>
+			</tr>
+		</table>
+	    
+		<hr>
+		<table>
+		{% for post in posts %}
+			{% include 'post.html' %}
+		{% endfor %}
+		</table>
+	{% else %}
+    	<h1>User not found</h1>
+    {% endif %}
+ 
+{% endblock %}
