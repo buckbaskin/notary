@@ -17,3 +17,14 @@ To run the instance:
 ```
 $ mongod --smallfiles --dbpath ./data/db
 ```
+
+## Remember: use venv
+```
+$ source venv/bin/activate
+```
+
+## To run the server:
+```
+$ cd .../notary
+$ python run.py
+```
