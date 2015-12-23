@@ -54,7 +54,6 @@
 				<h4 style="border-bottom: 1px solid black;">Note Meta Data</h4>
 			</div>
 			<p id="note-content" class="editable" contenteditable="true" onblur="saveContent()"> Note content: preview text with a lot of words behind it. abcdefg hi jklmnopoqnaosdfj no qwerty qwerty qwery qwerty qwerty qwerty qwerty qwerty qwerty</p>
-			<input type="button" value="Save" onclick="saveAllEdits()"/>
 		</div>
 		<script type="text/javascript">
 			function saveAllEdits() {
@@ -62,21 +61,29 @@
 				saveMeta();
 				saveContent();
 			}
+			function displaySaved() {
+				document.getElementById("saved").innerHTML = " - Saved"
+				setTimeout(function() {
+					document.getElementById("saved").innerHTML = ""
+				}, 1000);
+			}
 			function saveTitle() {
 				var editElem = document.getElementById("note-title");
 				var userVersion = editElem.innerHTML;
 				localStorage.userEdits = userVersion;
-				alert("Title saved")
-				console.log("innerHTML: "+userVersion)
-				document.getElementById("saved").innerHTML = " - Saved"
+				displaySaved();
 			}
 			function saveMeta() {
 				var editElem = document.getElementById("note-meta");
-				alert("Meta saved")
+				var userVersion = editElem.innerHTML;
+				localStorage.userEdits = userVersion;
+				displaySaved();
 			}
 			function saveContent() {
 				var editElem = document.getElementById("note-content");
-				alert("Content saved")
+				var userVersion = editElem.innerHTML;
+				localStorage.userEdits = userVersion;
+				displaySaved();
 			}
 		</script>
 	</div>
