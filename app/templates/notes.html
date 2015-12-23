@@ -14,10 +14,16 @@
 		.intro-line p {
 			display: inline;
 			vertical-align: top;
+			padding-left: 5px;
 		}
 		div.note-selector {
 			border-right: 1px solid black;
 			height: 100%;
+		}
+		.scrolling {
+			overflow-y: auto;
+			overflow-x: hidden;
+			margin-right: -10px;
 		}
 	</style>
 	
@@ -25,18 +31,53 @@
 		<div class="col-md-3 note-selector">
 			<!-- note selector -->
 			<p>Note Selector</p>
-			<div class="row note-preview">
-				<div class="intro-line">
-					<h4>Note1</h4>
-					<p> - |preview text with a lot of words behind it. abcdefg hi jklmnopoqnaosdfj no qwerty qwerty qwery qwerty qwerty qwerty qwerty qwerty qwerty|</p>
+			<div class="scrolling">
+				<div class="row note-preview">
+					<div class="intro-line">
+						<h4>Note1</h4>
+						<p> - |preview text with a lot of words behind it. abcdefg hi jklmnopoqnaosdfj no qwerty qwerty qwery qwerty qwerty qwerty qwerty qwerty qwerty|</p>
+					</div>
 				</div>
-			</div>
-			<div class="row note-preview">
-				<h4>Note2<h4>
+				<div class="row note-preview">
+					<h4>Note2<h4>
+				</div>
 			</div>
 		</div>
 		<div class="col-md-9">
-			<p>Note Editor</p>
+			<div style="border-bottom: 1px solid black;">
+				<h1>
+					<div id="note-title" class="editable" contenteditable="true" onblur="saveTitle()" style="display: inline;">Note Editor - Note Title: Note1</div>
+					<div id="saved" style="display: inline;"></div>
+				</h1>
+			</div>
+			<div id="note-meta" class="editable" contenteditable="true" onblur="saveMeta()">
+				<h4 style="border-bottom: 1px solid black;">Note Meta Data</h4>
+			</div>
+			<p id="note-content" class="editable" contenteditable="true" onblur="saveContent()"> Note content: preview text with a lot of words behind it. abcdefg hi jklmnopoqnaosdfj no qwerty qwerty qwery qwerty qwerty qwerty qwerty qwerty qwerty</p>
+			<input type="button" value="Save" onclick="saveAllEdits()"/>
 		</div>
+		<script type="text/javascript">
+			function saveAllEdits() {
+				saveTitle();
+				saveMeta();
+				saveContent();
+			}
+			function saveTitle() {
+				var editElem = document.getElementById("note-title");
+				var userVersion = editElem.innerHTML;
+				localStorage.userEdits = userVersion;
+				alert("Title saved")
+				console.log("innerHTML: "+userVersion)
+				document.getElementById("saved").innerHTML = " - Saved"
+			}
+			function saveMeta() {
+				var editElem = document.getElementById("note-meta");
+				alert("Meta saved")
+			}
+			function saveContent() {
+				var editElem = document.getElementById("note-content");
+				alert("Content saved")
+			}
+		</script>
 	</div>
 {% endblock %}
