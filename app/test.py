@@ -6,13 +6,13 @@ import analytics
 
 @analytics.trace
 def doathing(a, b, c, *args):
-    print a
-    print '---'
-    print b
-    print '---'
-    print c
-    print '---'
-    print args
+    print(a)
+    print('---')
+    print(b)
+    print('---')
+    print(c)
+    print('---')
+    print(args)
     # print '---'
     # print vargs
     return 10
