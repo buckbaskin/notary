@@ -1,10 +1,42 @@
 {% extends "base.html" %}
 {% block content %}
-	<style></style>
+	<style>
+		div.note-preview {
+			height: 96px;
+			padding: 10px;
+			border-top: 1px solid black;
+			border-bottom: 1px solid black;
+			word-wrap: normal;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		.intro-line h4,
+		.intro-line p {
+			display: inline;
+			vertical-align: top;
+		}
+		div.note-selector {
+			border-right: 1px solid black;
+			height: 100%;
+		}
+	</style>
 	
 	<div class="row">
-		<div class="col-md-4 col-md-offset-4">
-			<p>Notes Page</p>
+		<div class="col-md-3 note-selector">
+			<!-- note selector -->
+			<p>Note Selector</p>
+			<div class="row note-preview">
+				<div class="intro-line">
+					<h4>Note1</h4>
+					<p> - |preview text with a lot of words behind it. abcdefg hi jklmnopoqnaosdfj no qwerty qwerty qwery qwerty qwerty qwerty qwerty qwerty qwerty|</p>
+				</div>
+			</div>
+			<div class="row note-preview">
+				<h4>Note2<h4>
+			</div>
+		</div>
+		<div class="col-md-9">
+			<p>Note Editor</p>
 		</div>
 	</div>
 {% endblock %}

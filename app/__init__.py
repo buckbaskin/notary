@@ -5,7 +5,7 @@ if not '/home/buck/Github/notary' in sys.path:
     sys.path.append('/home/buck/Github/notary')
 
 print('app/__init__.py')
-print(sys.path)
+# print(sys.path)
 
 from app.config import server_config
 
