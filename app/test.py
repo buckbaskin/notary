@@ -1,6 +1,5 @@
 import sys
 sys.path.append('/home/buck/Github/notary')
-# print sys.path
 
 import analytics
 
@@ -13,8 +12,6 @@ def doathing(a, b, c, *args):
     print(c)
     print('---')
     print(args)
-    # print '---'
-    # print vargs
     return 10
 
 if __name__ == '__main__':

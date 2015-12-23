@@ -1,6 +1,5 @@
 from app import server
 from flask import render_template
-from app import db
 
 import json
 
@@ -10,7 +9,7 @@ import analytics
 @server.route('/', methods=['GET'])
 def index():
     vm = {}
-    vm['title'] = 'Notary'
+    vm['title'] = ''
     return render_template('index.html', vm=vm)
 
 @analytics.trace
@@ -45,10 +44,14 @@ def update_note(note_id):
 @analytics.trace
 @server.errorhandler(404)
 def not_found_error(error):
-    return render_template('404.html', title="something wasn't found"), 404
+    vm = {}
+    vm['title'] = "something wasn't found"
+    return render_template('404.html', vm=vm), 404
 
 @analytics.trace
 @server.errorhandler(500)
 def internal_server_error(error):
     db.session.rollback()
-    return render_template('500.html', title="oops, the computer didn't computer"), 500
+    vm = {}
+    vm['title'] = "oops, the computer didn't computer"
+    return render_template('500.html', vm=vm), 500

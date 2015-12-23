@@ -15,17 +15,11 @@ def save_call(fname, params=(), args=(), vargs={}, ret_val=None):
     print('lp: '+str(len(params)))
 
     for i in range(0,len(params)):
-        # print 'i: '+str(i)
         param = params[i]
         if len(arg_queue) > 0:
             if i == (len(params)-1):
-                # print 'aq: '+str(arg_queue)
-                # print 'vq: '+str(varg_queue)
                 arg = arg_queue
-                # print 'pair: '+str((param, arg,))
                 out_queue.append((param, arg,))
-                # varg = varg_queue
-                # out_queue.append((param, varg,))
             else:
                 arg = arg_queue.pop(0)
                 out_queue.append((param, arg,))
@@ -33,19 +27,8 @@ def save_call(fname, params=(), args=(), vargs={}, ret_val=None):
             arg = varg_queue.pop(param)
             out_queue.append((param, arg,))
         else:
-            # if i == (len(params)-1):
-            #     print 'vq: '+str(varg_queue)
-            #     varg = varg_queue
-            #     out_queue.append((param, varg,))
-            # elif len(arg_queue) == 0:
-            #     arg = arg_queue
-            #     # print 'pair: '+str((param, arg,))
-            #     out_queue.append((param, arg,))
-            # else:
-                print('param not matched: '+str(param))
+            print('param not matched: '+str(param))
 
-    # print str(datetime.datetime.now())
-    # print str(fname)+'('+str(out_queue)+')'+' => '+str(ret_val)
     record = {
         "date-utc": datetime.datetime.utcnow(),
         "function-name": fname,
