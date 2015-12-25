@@ -1,0 +1,15 @@
+numpy
+pandas
+BeautifulSoup
+mrjob
+pattern
+seaborn
+pyquery
+requests
+networkx
+bitarray
+blaze
+bz2file
+bzip2
+coverage
+cloudpickle
