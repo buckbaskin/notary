@@ -1,5 +1,4 @@
 function saveAllEdits() {
-	alert('saveAllEdits');
 	var ttl = document.getElementById("note-title").innerHTML;
 	var mta = document.getElementById("note-meta").innerHTML;
 	var cnt = document.getElementById("note-content").innerHTML;
@@ -36,7 +35,8 @@ function displaySaved() {
 // }
 
 function postNoteJSON(id_, title, meta, content) {
-	alert('Saving note: '+id_);
+	alert('Saving note: '+id_+
+		'\nTitle: '+title+'\nMeta: '+meta+'');
 	var xmlhttp = new XMLHttpRequest();
 	var url = '/n/'+id_;
 
@@ -56,5 +56,7 @@ function postNoteJSON(id_, title, meta, content) {
 	}
 
 	xmlhttp.open("POST", url, true);
+	alert('about to send out');
 	xmlhttp.send(JSON.stringify(json_out));
+	alert('consider it sent');
 }
