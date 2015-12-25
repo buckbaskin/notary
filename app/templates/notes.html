@@ -44,16 +44,23 @@
 			</div>
 		</div>
 		<div class="col-md-9 note-editor">
+			<script>
+				{% if vm['id_'] %}
+			    var id_ = {{ vm['id_'] }};
+			    {% else %}
+			    var id_ = 1;
+			    {% endif %}
+			</script>
 			<div style="border-bottom: 1px solid black;">
 				<h1>
-					<div id="note-title" class="editable" contenteditable="true" onblur="saveTitle()" style="display: inline;">Note Editor - Note Title: Note1</div>
+					<div id="note-title" class="editable" contenteditable="true" onblur="saveAllEdits()" style="display: inline;">Note Editor - Note Title: Note1</div>
 					<div id="saved" style="display: inline;"></div>
 				</h1>
 			</div>
-			<div id="note-meta" class="editable" contenteditable="true" onblur="saveMeta()">
+			<div id="note-meta" class="editable" contenteditable="true" onblur="saveAllEdits()">
 				<h4 style="border-bottom: 1px solid black;">Note Meta Data</h4>
 			</div>
-			<p id="note-content" class="editable" contenteditable="true" onblur="saveContent()"> Note content: preview text with a lot of words behind it. abcdefg hi jklmnopoqnaosdfj no qwerty qwerty qwery qwerty qwerty qwerty qwerty qwerty qwerty</p>
+			<p id="note-content" class="editable" contenteditable="true" onblur="saveAllEdits()"> Note content: preview text with a lot of words behind it. abcdefg hi jklmnopoqnaosdfj no qwerty qwerty qwery qwerty qwerty qwerty qwerty qwerty qwerty</p>
 		</div>
 	</div>
 {% endblock %}
