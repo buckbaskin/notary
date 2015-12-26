@@ -19,6 +19,10 @@ def index():
 def notes():
     vm = {}
     vm['title'] = 'Your Notes'
+    cursor = Note.get_all()
+    vm['notes'] = []
+    for note in cursor:
+        vm['notes'].append(note)
     return render_template('notes.html', vm=vm)
 
 @analytics.trace
@@ -31,15 +35,15 @@ def create_note():
 @server.route('/n/<note_id>.json', methods=['GET'])
 def note_json(note_id):
     # do something with json
-    print 'type?: '+str(type(note_id))
-    print 'id?  : '+str(note_id)
+    print('type?: '+str(type(note_id)))
+    print('id?  : '+str(note_id))
     note = Note.get_one(note_id)
-    print 'type?: '+str(type(note))
-    print 'note?: '+str(note)
-    print 'note[]? '+str(note['_id'])
+    print('type?: '+str(type(note)))
+    print('note?: '+str(note))
+    print('note[]? '+str(note['_id']))
     note['_id'] = str(note['_id'])
     json_ = json.dumps(note)
-    print 'json_: '+str(json_)
+    print('json_: '+str(json_))
     return json_
 
 @analytics.trace
@@ -48,11 +52,12 @@ def update_note(note_id):
     # do something with incoming json to server
     # this is where I'd do the note delta/version control
     # this may also include delete inforamtion
-    print 'note_id', note_id
+    print('note_id', note_id)
     content = request.get_json()
-    print 'content title: ', content['title']
-    print 'content meta: ', content['meta']
-    print 'content cont: ', content['content']
+    print('content title: ', content['title'])
+    print('content meta: ', content['meta'])
+    print('content cont: ', content['content'])
+    result = Note.update_one(note_id, content['title'], content['meta'], content['content'])
     return note_json(note_id)
 
 @analytics.trace

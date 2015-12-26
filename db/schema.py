@@ -8,7 +8,7 @@ db = client.notary_database
 class Schema(object):
     collection = 'default'
 
-    def to_mongo(self):
+    def to_mongo():
         return {'version' : 0}
 
     @staticmethod
@@ -45,16 +45,22 @@ class Note(Schema):
 
     @staticmethod
     def to_mongo(title, meta, content, version=0):
-        base = super(Note, self).to_mongo()
+        base = Schema.to_mongo()
         add_ = {
             'title': title,
             'meta': meta,
             'content': content
         }
-        newm = dict(base.items() + add_.items())
+        newm = dict(base, **add_)
         newm['version'] = version
 
         return newm
+
+    @staticmethod
+    def get_all():
+        collection = getattr(db, Note.collection)
+        cursor = collection.find()
+        return cursor
 
     @staticmethod
     def update_one(id_, title, meta, content):
@@ -83,7 +89,7 @@ class Note(Schema):
     def create_one():
         collection = getattr(db, Note.collection)
         result = collection.insert_one(
-            self.to_mongo('New Note', '', '', 0)
+            Note.to_mongo('New Note', '|', 'begin typing here', 0)
             )
         id_ = result.inserted_id
         return id_

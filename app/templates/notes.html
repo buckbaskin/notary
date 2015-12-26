@@ -31,16 +31,27 @@
 		<div class="col-md-3 note-selector">
 			<!-- note selector -->
 			<p>Note Selector</p>
+			<input type="button" value="New Note" onclick="createNewNote();" ></input>
+			<input type="button" value="Sync" onclick="syncNotes();" ></input>
 			<div class="scrolling">
+				<!-- example note -->
 				<div class="row note-preview">
 					<div class="intro-line">
 						<h4>Note1</h4>
 						<p> - |preview text with a lot of words behind it. abcdefg hi jklmnopoqnaosdfj no qwerty qwerty qwery qwerty qwerty qwerty qwerty qwerty qwerty|</p>
 					</div>
 				</div>
-				<div class="row note-preview">
-					<h4>Note2<h4>
+				<!-- end example note -->
+				{% if vm['notes'] %}
+				{% for note in vm['notes'] %}
+				<div class="row note-preview" onclick="loadNote( '{{ note['_id'] }}' );">
+					<div class="intro-line">
+						<h4>{{ note['title'] }}</h4>
+						<p> - |{{ note['meta'] }}|{{ note['content'] }}|</p>
+					</div>
 				</div>
+				{% endfor %}
+				{% endif %}
 			</div>
 		</div>
 		<div class="col-md-9 note-editor">
