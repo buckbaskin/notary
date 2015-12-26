@@ -26,6 +26,17 @@ def notes():
     return render_template('notes.html', vm=vm)
 
 @analytics.trace
+@server.route('/n.json', methods=['GET'])
+def get_notes():
+    vm = {}
+    cursor = Note.get_all()
+    notes = []
+    for note in cursor:
+        note['_id'] = str(note['_id'])
+        notes.append(note)
+    return json.dumps(notes)
+
+@analytics.trace
 @server.route('/notes', methods=['POST'])
 def create_note():
     new_id = Note.create_one()
