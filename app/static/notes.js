@@ -121,4 +121,17 @@ function loadNote(new_id) {
 
 function syncNotes() {
 	console.log('sync notes');
+	var xmlhttp = new XMLHttpRequest();
+	var url = '/n.json';
+
+	xmlhttp.open("GET", url, true);
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			var notes_from_json = JSON.parse( xmlhttp.responseText );
+			console.log(notes_from_json);
+		}
+	}
+
+	console.log(url)
+	xmlhttp.send();
 }
