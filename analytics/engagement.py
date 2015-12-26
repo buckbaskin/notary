@@ -12,7 +12,7 @@ def save_call(fname, params=(), args=(), vargs={}, ret_val=None):
     varg_queue = dict(vargs)
     out_queue = []
 
-    print('lp: '+str(len(params)))
+    # print('lp: '+str(len(params)))
 
     for i in range(0,len(params)):
         param = params[i]
@@ -27,7 +27,8 @@ def save_call(fname, params=(), args=(), vargs={}, ret_val=None):
             arg = varg_queue.pop(param)
             out_queue.append((param, arg,))
         else:
-            print('param not matched: '+str(param))
+            # print('param not matched: '+str(param))
+            pass
 
     record = {
         "date-utc": datetime.datetime.utcnow(),
@@ -40,7 +41,7 @@ def save_call(fname, params=(), args=(), vargs={}, ret_val=None):
 
 def trace(function):
     def wrapped_function(*args, **vargs):
-        print(function.__name__)
+        # print(function.__name__)
 
         call_name = function.__name__
         call_params = function.__code__.co_varnames

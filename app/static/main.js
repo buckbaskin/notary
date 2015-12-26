@@ -38,7 +38,7 @@ function postNoteJSON(id_, title, meta, content) {
 	alert('Saving note: '+id_+
 		'\nTitle: '+title+'\nMeta: '+meta+'');
 	var xmlhttp = new XMLHttpRequest();
-	var url = '/n/'+id_;
+	var url = '/n/'+id_+'.json';
 
 	// var json_out = '{'+'"title" : '+title+', "meta" : '+meta+', "content" : '+content+' }'
 	var myData = {
@@ -46,17 +46,19 @@ function postNoteJSON(id_, title, meta, content) {
 		"meta" : meta,
 		"content" : content
 	}
+
+	var myJson = JSON.stringify(myData);
+	console.log(myJson);
 	
+	xmlhttp.open("POST", url, true);
 	xmlhttp.setRequestHeader('Content-Type', 'application/json');
 
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			alert(xmlhttp.responseText);
+			alert('res: '+xmlhttp.responseText);
 		}
 	}
 
-	xmlhttp.open("POST", url, true);
-	alert('about to send out');
-	xmlhttp.send(JSON.stringify(json_out));
-	alert('consider it sent');
+	console.log(url)
+	xmlhttp.send(myJson);
 }
