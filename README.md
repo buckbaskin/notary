@@ -31,9 +31,6 @@ $ python run.py
 
 #TODO
 
-- store the current title, meta, content as a variable in the javascript, which is updated then pushed into the html
-  - do this for the entire list, and update the inforamtion locally in the process of saving it (i.e. update the list locally)
-- reorder the javascript functions to make them in a logical order
 - Make meta a list of tags, displayed as comma separated, or squares/rectangles?
 - sync attempts to push changes first, then pull changes
 - add error handling/tracking. If a request is made where the function returns an error, it is recorded in the engagement.
