@@ -37,3 +37,4 @@ $ python run.py
   - set the id of each element in the list as the html id for the content where its easy to replace all the information. This will make it easy to getElementById, and insert innerHtml
 - add error handling/tracking. If a request is made where the function returns an error, it is recorded in the engagement.
 - add in a script for viewing the aggregate information on page accesses/traced functions in the app.
+- update bootstrap colors to make it light blue on dark blue color scheme (for everything except the text?)
