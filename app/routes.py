@@ -22,7 +22,8 @@ def notes():
     cursor = Note.get_all()
     vm['notes'] = []
     for note in cursor:
-        vm['notes'].append(note)
+        note['_id'] = str(note['_id'])
+        vm['notes'].append(dict(note))
     return render_template('notes.html', vm=vm)
 
 @analytics.trace

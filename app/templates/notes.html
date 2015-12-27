@@ -56,14 +56,10 @@
 		</div>
 		<div class="col-md-9 note-editor">
 			<script>
-				{% if vm['id_'] %}
-			    var id_ = {{ vm['id_'] }};
-			    {% else %}
-			    var id_ = '567dff3599b4971e04354410';
-			    {% endif %}
-			    {% if vm['notes'] and vm['notes']|length > 0 %}
-			    var id_ = {{ vm['notes']['_id'] }};
-			    var notes = {{ vm['notes'] }};
+				{% if vm['notes'] and vm['notes']|length > 0 %}
+			    var id_ = "{{ vm.notes[0]._id }}";
+				// Don't do this. It would require writing out everything as json or something...Load this on first sync, note load, etc
+			    // var notes = {{ vm['notes'] }};
 			    loadNote(id_);
 			    {% else %}
 			    var id_ = '567dff3599b4971e04354410';

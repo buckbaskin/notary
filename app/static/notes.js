@@ -1,3 +1,5 @@
+var notes = [];
+
 function saveAllEdits() {
 	var ttl = document.getElementById("note-title").innerHTML;
 	var mta = document.getElementById("note-meta").innerHTML;
@@ -98,33 +100,39 @@ function createNewNote() {
 	syncNotes();
 }
 
-function loadNote(new_id, title, meta, content) {
+function loadNote(new_id) {
 	syncNotes();
-	if ( title === undefined || content === undefined || meta === undefined) {
-		var xmlhttp = new XMLHttpRequest();
-		var url = '/n/'+new_id+'.json';
-
-		xmlhttp.open("GET", url, true);
-		xmlhttp.onreadystatechange = function() {
-			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-				var from_json = JSON.parse( xmlhttp.responseText );
-				console.log(from_json);
-				id_ = from_json._id;
-				document.getElementById("note-title").innerHTML = from_json.title;
-				document.getElementById("note-meta").innerHTML = from_json.meta;
-				document.getElementById("note-content").innerHTML = from_json.content;
-				console.log('returned values were set');
+	if (window.notes !== undefined) {
+		for (var i = window.notes.length - 1; i >= 0; i--) {
+			note_candidate = window.notes[i];
+			if (note_candidate._id === new_id) {
+				id_ = new_id;
+				document.getElementById("note-title").innerHTML = note_candidate.title;
+				document.getElementById("note-meta").innerHTML = note_candidate.meta;
+				document.getElementById("note-content").innerHTML = note_candidate.content;
+				console.log('returned values were set from local values');
+				return;
 			}
-		};
-
-		console.log(url);
-		xmlhttp.send();
-	} else {
-		id_ = new_id;
-		document.getElementById("note-title").innerHTML = title;
-		document.getElementById("note-meta").innerHTML = meta;
-		document.getElementById("note-content").innerHTML = content;
+		}
 	}
+	var xmlhttp = new XMLHttpRequest();
+	var url = '/n/'+new_id+'.json';
+
+	xmlhttp.open("GET", url, true);
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			var from_json = JSON.parse( xmlhttp.responseText );
+			console.log(from_json);
+			id_ = from_json._id;
+			document.getElementById("note-title").innerHTML = from_json.title;
+			document.getElementById("note-meta").innerHTML = from_json.meta;
+			document.getElementById("note-content").innerHTML = from_json.content;
+			console.log('returned values were set');
+		}
+	};
+
+	console.log(url);
+	xmlhttp.send();
 }
 
 function syncNotes() {
@@ -136,11 +144,15 @@ function syncNotes() {
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			var notes_from_json = JSON.parse( xmlhttp.responseText );
-			console.log(notes_from_json);
+			if (window.notes === undefined) {
+				window.notes = [];
+			}
+			notes = notes_from_json;
+			console.log(notes);
 			var accum = '';
 			var note1 = notes_from_json[0];
 			var str_ = build_note_preview_to_html(note1._id, note1.title, note1.meta, note1.content);
-			console.log(str_);
+			// console.log(str_);
 			for (var i = 0; i < notes_from_json.length; i++) {
 				note1 = notes_from_json[i];
 				str_ = build_note_preview_to_html(note1._id, note1.title, note1.meta, note1.content);
