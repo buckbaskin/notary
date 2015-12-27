@@ -4,6 +4,8 @@ function saveAllEdits() {
 	var cnt = document.getElementById("note-content").innerHTML;
 
 	postNoteJSON(id_, ttl, mta, cnt);
+
+	syncNotes();
 }
 
 function displaySaved() {
@@ -35,8 +37,7 @@ function displaySaved() {
 // }
 
 function postNoteJSON(id_, title, meta, content) {
-	console.log('Saving note: '+id_+
-		'\nTitle: '+title+'\nMeta: '+meta+'');
+	console.log('Saving note: '+id_+'\nTitle: '+title+'\nMeta: '+meta+'');
 
 	var xmlhttp = new XMLHttpRequest();
 	var url = '/n/'+id_+'.json';
@@ -106,8 +107,8 @@ function loadNote(new_id) {
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			var from_json = JSON.parse( xmlhttp.responseText );
-			console.log(from_json)
-			id_ = from_json["_id"]
+			console.log(from_json);
+			id_ = from_json["_id"];
 			document.getElementById("note-title").innerHTML = from_json["title"];
 			document.getElementById("note-meta").innerHTML = from_json["meta"];
 			document.getElementById("note-content").innerHTML = from_json["content"];
@@ -115,7 +116,7 @@ function loadNote(new_id) {
 		}
 	}
 
-	console.log(url)
+	console.log(url);
 	xmlhttp.send();
 }
 
