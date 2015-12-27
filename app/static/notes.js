@@ -148,8 +148,7 @@ function syncNotes() {
 }
 
 function build_note_preview_to_html(id_, title, meta, content) {
-	var str_ = '<div class="row note-preview" onclick="loadNote( ';
-	str_ = str_ + id_ + ' );">';
+	var str_ = '<div class="row note-preview" onclick="loadNote( \''+ id_ + '\' );">';
 	str_ = str_ + '<div class="intro-line">';
 	str_ = str_ + '<h4>'+title+'</h4>';
 	str_ = str_ + '<p> - |' + meta+ '|' +content +'|</p>';
