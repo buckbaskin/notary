@@ -33,7 +33,6 @@ $ python run.py
 
 - store the current title, meta, content as a variable in the javascript, which is updated then pushed into the html
   - do this for the entire list, and update the inforamtion locally in the process of saving it (i.e. update the list locally)
-  - set the id of each element in the list as the html id for the content where its easy to replace all the information. This will make it easy to getElementById, and insert innerHtml
 - reorder the javascript functions to make them in a logical order
 - Make meta a list of tags, displayed as comma separated, or squares/rectangles?
 - sync attempts to push changes first, then pull changes
@@ -50,3 +49,5 @@ $ python run.py
 
 # TODO to-sort
 - add in a scope variable for managing the in-javascript variables
+- add a date-created, date-last-updated field to the note specification
+- set the id of each element in the list as the html id for the content where its easy to replace all the information. This will make it easy to getElementById, and insert innerHtml. Only update the individual html content instead of the entire list.
