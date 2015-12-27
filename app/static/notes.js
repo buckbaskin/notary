@@ -9,9 +9,9 @@ function saveAllEdits() {
 }
 
 function displaySaved() {
-	document.getElementById("saved").innerHTML = " - Saved"
+	document.getElementById("saved").innerHTML = " - Saved";
 	setTimeout(function() {
-		document.getElementById("saved").innerHTML = ""
+		document.getElementById("saved").innerHTML = "";
 	}, 1000);
 }
 
@@ -47,7 +47,7 @@ function postNoteJSON(id_, title, meta, content) {
 		"title" : title,
 		"meta" : meta,
 		"content" : content
-	}
+	};
 
 	var myJson = JSON.stringify(myData);
 	console.log(myJson);
@@ -58,16 +58,16 @@ function postNoteJSON(id_, title, meta, content) {
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			var from_json = JSON.parse( xmlhttp.responseText );
-			console.log(from_json)
-			id_ = from_json["_id"];
-			document.getElementById("note-title").innerHTML = from_json["title"];
-			document.getElementById("note-meta").innerHTML = from_json["meta"];
-			document.getElementById("note-content").innerHTML = from_json["content"];
+			console.log(from_json);
+			id_ = from_json._id;
+			document.getElementById("note-title").innerHTML = from_json.title;
+			document.getElementById("note-meta").innerHTML = from_json.meta;
+			document.getElementById("note-content").innerHTML = from_json.content;
 			console.log('returned values were set');
 		}
-	}
+	};
 
-	console.log(url)
+	console.log(url);
 	xmlhttp.send(myJson);
 }
 
@@ -83,16 +83,16 @@ function createNewNote() {
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			var from_json = JSON.parse( xmlhttp.responseText );
-			console.log(from_json)
-			id_ = from_json["_id"];
-			document.getElementById("note-title").innerHTML = from_json["title"];
-			document.getElementById("note-meta").innerHTML = from_json["meta"];
-			document.getElementById("note-content").innerHTML = from_json["content"];
+			console.log(from_json);
+			id_ = from_json._id;
+			document.getElementById("note-title").innerHTML = from_json.title;
+			document.getElementById("note-meta").innerHTML = from_json.meta;
+			document.getElementById("note-content").innerHTML = from_json.content;
 			console.log('returned values were set');
 		}
-	}
+	};
 
-	console.log(url)
+	console.log(url);
 	xmlhttp.send('');
 
 	syncNotes();
@@ -108,13 +108,13 @@ function loadNote(new_id) {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			var from_json = JSON.parse( xmlhttp.responseText );
 			console.log(from_json);
-			id_ = from_json["_id"];
-			document.getElementById("note-title").innerHTML = from_json["title"];
-			document.getElementById("note-meta").innerHTML = from_json["meta"];
-			document.getElementById("note-content").innerHTML = from_json["content"];
+			id_ = from_json._id;
+			document.getElementById("note-title").innerHTML = from_json.title;
+			document.getElementById("note-meta").innerHTML = from_json.meta;
+			document.getElementById("note-content").innerHTML = from_json.content;
 			console.log('returned values were set');
 		}
-	}
+	};
 
 	console.log(url);
 	xmlhttp.send();
@@ -132,18 +132,18 @@ function syncNotes() {
 			console.log(notes_from_json);
 			var accum = '';
 			var note1 = notes_from_json[0];
-			var str_ = build_note_preview_to_html(note1["_id"], note1["title"], note1["meta"], note1["content"]);
+			var str_ = build_note_preview_to_html(note1._id, note1.title, note1.meta, note1.content);
 			console.log(str_);
 			for (var i = 0; i < notes_from_json.length; i++) {
 				note1 = notes_from_json[i];
-				str_ = build_note_preview_to_html(note1["_id"], note1["title"], note1["meta"], note1["content"]);
+				str_ = build_note_preview_to_html(note1._id, note1.title, note1.meta, note1.content);
 				accum = accum + str_;
 			}
 			document.getElementById("notes-list").innerHTML = accum;
 		}
-	}
+	};
 
-	console.log(url)
+	console.log(url);
 	xmlhttp.send();
 }
 
