@@ -56,6 +56,9 @@
 		</div>
 		<div class="col-md-9 note-editor">
 			<script>
+				var title = "";
+				var meta = "";
+				var content = "";
 				{% if vm['notes'] and vm['notes']|length > 0 %}
 			    var id_ = "{{ vm.notes[0]._id }}";
 				// Don't do this. It would require writing out everything as json or something...Load this on first sync, note load, etc
@@ -64,6 +67,7 @@
 			    {% else %}
 			    var id_ = '567dff3599b4971e04354410';
 			    {% endif %}
+
 			</script>
 			<div style="border-bottom: 1px solid black;">
 				<h1>

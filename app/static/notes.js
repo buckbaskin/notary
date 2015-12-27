@@ -6,6 +6,7 @@ function saveAllEdits() {
 	var cnt = document.getElementById("note-content").innerHTML;
 
 	postNoteJSON(id_, ttl, mta, cnt);
+	updateListItem(id_, ttl, mta, cnt);
 
 	syncNotes();
 }
@@ -37,6 +38,20 @@ function displaySaved() {
 // 	localStorage.userEdits = userVersion;
 // 	displaySaved();
 // }
+
+function updateListItem(id_, title, meta, content) {
+	for (var i = window.notes.length - 1; i >= 0; i--) {
+		if (window.notes[i]._id === id_) {
+			
+			window.notes[i].title = title;
+			window.notes[i].meta = meta;
+			window.notes[i].content = content;
+			
+			console.log('note data pushed into the local list');
+			return;
+		}
+	}
+}
 
 function postNoteJSON(id_, title, meta, content) {
 	console.log('Saving note: '+id_+'\nTitle: '+title+'\nMeta: '+meta+'');
@@ -100,6 +115,19 @@ function createNewNote() {
 	syncNotes();
 }
 
+function refreshView() {
+	if (window.title !== undefined) {
+		document.getElementById("note-title").innerHTML = title;
+	}
+	if (window.meta !== undefined) {
+		document.getElementById("note-meta").innerHTML = meta;
+	}
+	if (window.content !== undefined) {
+		document.getElementById("note-content").innerHTML = content;
+	}
+	console.log('view updated');
+}
+
 function loadNote(new_id) {
 	syncNotes();
 	if (window.notes !== undefined) {
@@ -107,10 +135,11 @@ function loadNote(new_id) {
 			note_candidate = window.notes[i];
 			if (note_candidate._id === new_id) {
 				id_ = new_id;
-				document.getElementById("note-title").innerHTML = note_candidate.title;
-				document.getElementById("note-meta").innerHTML = note_candidate.meta;
-				document.getElementById("note-content").innerHTML = note_candidate.content;
+				title = note_candidate.title;
+				meta = note_candidate.meta;
+				content = note_candidate.content;
 				console.log('returned values were set from local values');
+				refreshView();
 				return;
 			}
 		}
@@ -124,9 +153,10 @@ function loadNote(new_id) {
 			var from_json = JSON.parse( xmlhttp.responseText );
 			console.log(from_json);
 			id_ = from_json._id;
-			document.getElementById("note-title").innerHTML = from_json.title;
-			document.getElementById("note-meta").innerHTML = from_json.meta;
-			document.getElementById("note-content").innerHTML = from_json.content;
+			title = from_json.title;
+			meta = from_json.meta;
+			content = from_json.content;
+			refreshView();
 			console.log('returned values were set');
 		}
 	};
