@@ -81,7 +81,7 @@ function syncNotes() {
 			}
 			notes = notes_from_json;
 			console.log(notes);
-			updateListView();	
+			updateListView();
 		}
 	};
 
@@ -93,12 +93,27 @@ function updateListView() {
 	console.log('updating note-selector view');
 	var accum = '';
 	var str_ = build_note_preview_to_html(note1._id, note1.title, note1.meta, note1.content);
-	for (var i = 0; i < notes_from_json.length; i++) {
+	sortNotesByAttr('title');
+	for (var i = 0; i < notes.length; i++) {
 		note1 = notes_from_json[i];
 		str_ = build_note_preview_to_html(note1._id, note1.title, note1.meta, note1.content);
 		accum = accum + str_;
 	}
 	document.getElementById("notes-list").innerHTML = accum;
+}
+
+function sortNotesByAttr(attr) {
+	if (attr === 'title') {
+		notes = notes.sort(function(a, b) {
+			if (a.title > b.title) {
+				return 1;
+			} else if (a.title === b.title) {
+				return 0;
+			} else {
+				return -1;
+			}
+		});
+	}
 }
 
 function createNewNote() {
@@ -185,4 +200,10 @@ function build_note_preview_to_html(id_, title, meta, content) {
 	str_ = str_ + '<p> - |' + meta+ '|' +content +'|</p>';
 	str_ = str_ + '</div></div>';
 	return str_;
+}
+
+function string_to_meta(req) {
+	res = []
+	res.push(''+req)
+	return res;
 }

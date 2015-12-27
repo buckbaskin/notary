@@ -57,7 +57,7 @@
 		<div class="col-md-9 note-editor">
 			<script>
 				var title = "";
-				var meta = "";
+				var meta = [];
 				var content = "";
 				{% if vm['notes'] and vm['notes']|length > 0 %}
 			    var id_ = "{{ vm.notes[0]._id }}";

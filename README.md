@@ -36,7 +36,7 @@ $ python run.py
 - add error handling/tracking. If a request is made where the function returns an error, it is recorded in the engagement.
 - convert the api to send the note information as inforamtion in the post, and based on what information is in the post data, update/create/delete a note.
 - when returning the get all information in python, allow post or get tag to specify what the ordering is (default is last updated first, but if there is a valid field specified in the post, get all)
-  - sort the array in javascript so that last updated, is first, or last created, that kind of thing
+  - sort the array in javascript so that last updated, is first, or last created, that kind of thingl
 - add in a script for viewing the aggregate information on page accesses/traced functions in the app. Non-GUI for now.
 - make a queue of changes to be sent to the server, while using the note selector list as a variable to maintain the current state
   - make an indicator when a note has unsaved changes waiting to go to the server instead of briefly indicating that the note was saved. or maybe both
