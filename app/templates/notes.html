@@ -44,7 +44,7 @@
 				<!-- end example note -->
 				{% if vm['notes'] %}
 				{% for note in vm['notes'] %}
-				<div class="row note-preview" onclick="loadNote( '{{ note['_id'] }}' );">
+				<div id="{{ note['_id'] }}" class="row note-preview" onclick="loadNote( '{{ note['_id'] }}' );">
 					<div class="intro-line">
 						<h4>{{ note['title'] }}</h4>
 						<p> - |{{ note['meta'] }}|{{ note['content'] }}|</p>
@@ -62,7 +62,8 @@
 			    var id_ = '567dff3599b4971e04354410';
 			    {% endif %}
 			    {% if vm['notes'] and vm['notes']|length > 0 %}
-			    var id_ = {{ vm['notes']['_id'] }}
+			    var id_ = {{ vm['notes']['_id'] }};
+			    var notes = {{ vm['notes'] }};
 			    loadNote(id_);
 			    {% else %}
 			    var id_ = '567dff3599b4971e04354410';
