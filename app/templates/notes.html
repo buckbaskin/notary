@@ -26,14 +26,14 @@
 			margin-right: -10px;
 		}
 	</style>
-	
+	<script src="{{ url_for('static', filename='notes.js') }}"></script>
 	<div class="row">
 		<div class="col-md-3 note-selector">
 			<!-- note selector -->
 			<p>Note Selector</p>
 			<input type="button" value="New Note" onclick="createNewNote();" ></input>
 			<input type="button" value="Sync" onclick="syncNotes();" ></input>
-			<div class="scrolling">
+			<div id="notes-list" class="scrolling">
 				<!-- example note -->
 				<!-- <div class="row note-preview">
 					<div class="intro-line">
@@ -55,7 +55,6 @@
 			</div>
 		</div>
 		<div class="col-md-9 note-editor">
-			<script src="{{ url_for('static', filename='notes.js') }}"></script>
 			<script>
 				{% if vm['id_'] %}
 			    var id_ = {{ vm['id_'] }};

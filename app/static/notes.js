@@ -129,9 +129,29 @@ function syncNotes() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			var notes_from_json = JSON.parse( xmlhttp.responseText );
 			console.log(notes_from_json);
+			var accum = '';
+			var note1 = notes_from_json[0];
+			var str_ = build_note_preview_to_html(note1["_id"], note1["title"], note1["meta"], note1["content"]);
+			console.log(str_);
+			for (var i = 0; i < notes_from_json.length; i++) {
+				note1 = notes_from_json[i];
+				str_ = build_note_preview_to_html(note1["_id"], note1["title"], note1["meta"], note1["content"]);
+				accum = accum + str_;
+			}
+			document.getElementById("notes-list").innerHTML = accum;
 		}
 	}
 
 	console.log(url)
 	xmlhttp.send();
+}
+
+function build_note_preview_to_html(id_, title, meta, content) {
+	var str_ = '<div class="row note-preview" onclick="loadNote( ';
+	str_ = str_ + id_ + ' );">';
+	str_ = str_ + '<div class="intro-line">';
+	str_ = str_ + '<h4>'+title+'</h4>';
+	str_ = str_ + '<p> - |' + meta+ '|' +content +'|</p>';
+	str_ = str_ + '</div></div>';
+	return str_;
 }
