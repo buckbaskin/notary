@@ -33,6 +33,11 @@
 			<p>Note Selector</p>
 			<input type="button" value="New Note" onclick="createNewNote();" ></input>
 			<input type="button" value="Sync" onclick="syncNotes();" ></input>
+			<p>Sort by:&nbsp;
+				<input type="button" value="Title" onclick="sortNotesByAttr('title');">
+				<input type="button" value="Meta" onclick="sortNotesByAttr('meta');">
+				<input type="button" value="Content" onclick="sortNotesByAttr('content');">
+			</p>
 			<div id="notes-list" class="scrolling">
 				<!-- example note -->
 				<!-- <div class="row note-preview">
