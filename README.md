@@ -31,6 +31,7 @@ $ python run.py
 
 #TODO
 
+- change over the javascript calls to the new API, abstract away the Xrequest thing
 - convert the api to send the note information as inforamtion in the post, and based on what information is in the post data, update/create/delete a note.
   - update API before sync does push, so that there can be an API call to update multiple notes at once
 - sync attempts to push changes first, then pull changes

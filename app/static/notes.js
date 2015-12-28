@@ -243,3 +243,16 @@ function meta_to_string(req) {
 	};
 	return res;
 }
+
+function request(request, type, url, json, action, send) {
+	var xmlhttp = new XMLHttpRequest();
+	
+	xmlhttp.open(request, url, true);
+	if (type === 'json') {
+		xmlhttp.setRequestHeader('Content-Type', 'application/json');
+	}
+
+	xmlhttp.onreadystatechange = action
+
+	xmlhttp.send('');
+}
