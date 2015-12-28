@@ -31,7 +31,6 @@ $ python run.py
 
 #TODO
 
-- Make meta a list of tags, displayed as comma separated, or squares/rectangles?
 - sync attempts to push changes first, then pull changes
 - add error handling/tracking. If a request is made where the function returns an error, it is recorded in the engagement.
 - convert the api to send the note information as inforamtion in the post, and based on what information is in the post data, update/create/delete a note.
@@ -47,4 +46,6 @@ $ python run.py
 # TODO to-sort
 - add in a scope variable for managing the in-javascript variables
 - add a date-created, date-last-updated field to the note specification
+  - include a human readable short version, ex. Mar 5, 2015
+  - include a human readable long version, ex. 2:15pm Mar 5, 2015
 - set the id of each element in the list as the html id for the content where its easy to replace all the information. This will make it easy to getElementById, and insert innerHtml. Only update the individual html content instead of the entire list.
