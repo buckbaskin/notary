@@ -24,10 +24,9 @@ function postNoteJSON(id_, title, meta, content) {
 	};
 	var myJson = JSON.stringify(myData);
 	
-
-	request("POST", 'json', '/n.json', function(xmlhttp) {
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			var from_json = JSON.parse( xmlhttp.responseText );
+	request("POST", 'json', '/n.json', function(res) {
+		if (res.readyState == 4 && res.status == 200) {
+			var from_json = JSON.parse( res.responseText );
 			console.log(from_json);
 			id_ = from_json._id;
 			document.getElementById("note-title").innerHTML = from_json.title;
@@ -62,9 +61,9 @@ function displaySaved() {
 function syncNotes() {
 	console.log('sync notes');
 
-	request("GET", 'json', '/n.json', function(xmlhttp) {
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			var notes_from_json = JSON.parse( xmlhttp.responseText );
+	request("GET", 'json', '/n.json', function(res) {
+		if (res.readyState == 4 && res.status == 200) {
+			var notes_from_json = JSON.parse( res.responseText );
 			if (window.notes === undefined) {
 				window.notes = [];
 			}
@@ -124,9 +123,9 @@ function createNewNote() {
 	var data = { 'action': 'create' };
 	var myJson = JSON.stringify(data);
 	
-	request("POST", 'json', '/n.json', function(xmlhttp) {
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			var from_json = JSON.parse( xmlhttp.responseText );
+	request("POST", 'json', '/n.json', function(res) {
+		if (res.readyState == 4 && res.status == 200) {
+			var from_json = JSON.parse( res.responseText );
 			console.log(from_json);
 			id_ = from_json._id;
 			document.getElementById("note-title").innerHTML = from_json.title;
@@ -162,9 +161,9 @@ function loadNote(new_id) {
 	var data = { 'action':'readone', '_id': new_id };
 	var myJson = JSON.stringify(data);
 
-	request("POST", 'json', '/n.json', function(xmlhttp) {
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			var from_json = JSON.parse( xmlhttp.responseText );
+	request("POST", 'json', '/n.json', function(res) {
+		if (res.readyState == 4 && res.status == 200) {
+			var from_json = JSON.parse( res.responseText );
 			console.log(from_json);
 			id_ = from_json._id;
 			title = from_json.title;
