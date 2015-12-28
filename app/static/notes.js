@@ -25,7 +25,7 @@ function postNoteJSON(id_, title, meta, content) {
 	var myJson = JSON.stringify(myData);
 	
 
-	request("POST", 'json', '/n.json', function() {
+	request("POST", 'json', '/n.json', function(xmlhttp) {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			var from_json = JSON.parse( xmlhttp.responseText );
 			console.log(from_json);
@@ -62,7 +62,7 @@ function displaySaved() {
 function syncNotes() {
 	console.log('sync notes');
 
-	request("GET", 'json', '/n.json', function() {
+	request("GET", 'json', '/n.json', function(xmlhttp) {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			var notes_from_json = JSON.parse( xmlhttp.responseText );
 			if (window.notes === undefined) {
@@ -120,13 +120,11 @@ function sortNotesByAttr(attr) {
 function createNewNote() {
 	syncNotes();
 	
-	var xmlhttp = new XMLHttpRequest();
-	var url = '/notes';
-
-	xmlhttp.open("POST", url, true);
-	xmlhttp.setRequestHeader('Content-Type', 'application/json');
-
-	xmlhttp.onreadystatechange = function() {
+	var url = '/n.json';
+	var data = { 'action': 'create' };
+	var myJson = JSON.stringify(data);
+	
+	request("POST", 'json', '/n.json', function(xmlhttp) {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			var from_json = JSON.parse( xmlhttp.responseText );
 			console.log(from_json);
@@ -136,10 +134,7 @@ function createNewNote() {
 			document.getElementById("note-content").innerHTML = from_json.content;
 			console.log('returned values were set');
 		}
-	};
-
-	console.log(url);
-	xmlhttp.send('');
+	}, myJson);
 
 	syncNotes();
 }
@@ -163,11 +158,11 @@ function loadNote(new_id) {
 			}
 		}
 	}
-	var xmlhttp = new XMLHttpRequest();
-	var url = '/n/'+new_id+'.json';
 
-	xmlhttp.open("GET", url, true);
-	xmlhttp.onreadystatechange = function() {
+	var data = { 'action':'readone', '_id': new_id };
+	var myJson = JSON.stringify(data);
+
+	request("POST", 'json', '/n.json', function(xmlhttp) {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			var from_json = JSON.parse( xmlhttp.responseText );
 			console.log(from_json);
@@ -178,10 +173,7 @@ function loadNote(new_id) {
 			refreshView();
 			console.log('returned values were set');
 		}
-	};
-
-	console.log(url);
-	xmlhttp.send();
+	}, myJson);
 }
 
 function refreshView() {
@@ -234,7 +226,9 @@ function request(request, type, url, action, send) {
 		xmlhttp.setRequestHeader('Content-Type', 'application/json');
 	}
 
-	xmlhttp.onreadystatechange = action
+	xmlhttp.onreadystatechange = function () {
+		action(xmlhttp);
+	}
 
 	xmlhttp.send(send);
 }
