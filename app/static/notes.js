@@ -61,6 +61,19 @@ function displaySaved() {
 function syncNotes() {
 	console.log('sync notes');
 
+	var data = { 
+		'action': 'update', 
+		'notes': notes,
+	};
+	var myJson = JSON.stringify(data);
+
+	request("POST", 'json', '/n.json', function(res) {
+		if (res.readyState == 4 && res.status == 200) {
+			var response = JSON.parse( res.responseText );
+			console.log(response);
+		}
+	}, myJson);
+
 	request("GET", 'json', '/n.json', function(res) {
 		if (res.readyState == 4 && res.status == 200) {
 			var notes_from_json = JSON.parse( res.responseText );
@@ -205,7 +218,7 @@ function string_to_meta(req) {
 		if (res[i] !== '') {
 			meter.push(res[i]);
 		}
-	};
+	}
 	return meter;
 }
 
@@ -213,7 +226,7 @@ function meta_to_string(req) {
 	var res = '';
 	for (var i = 0; i < req.length; i++) {
 		res = res+req[i] + ', ';
-	};
+	}
 	return res;
 }
 
@@ -227,7 +240,7 @@ function request(request, type, url, action, send) {
 
 	xmlhttp.onreadystatechange = function () {
 		action(xmlhttp);
-	}
+	};
 
 	xmlhttp.send(send);
 }

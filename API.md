@@ -24,5 +24,5 @@ Based on the content of the JSON posted, this can perform a variety of operation
     - ```sort_by```: 'title', 'meta', 'content', 'created', 'updated'. default is 'title'
     - ```page```: if there are more than the specified count, chose which page to render. If it is invalid, choose 0.
     - ```count```: number of notes to return. Max 100. Note, count is not yet implemented.
-- Update: ```{'action': 'update', 'notes': [ list of note objects to save/update ] }```. Returns empty string
-- Delete: ```{'action': 'delete', 'ids' : [ list of note ids to delete ] }```. Returns empty string
+- Update: ```{'action': 'update', 'notes': [ list of note objects to save/update ] }```. Returns {'response': 'success'}
+- Delete: ```{'action': 'delete', 'ids' : [ list of note ids to delete ] }```. Returns {'response': 'success'}

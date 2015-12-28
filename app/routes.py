@@ -94,14 +94,14 @@ def update_note(content):
     # TODO(buckbaskin): this is where I'd do the note delta/version control
     for note in content['notes']:
         result = Note.update_one(note['_id'], note['title'], note['meta'], note['content'])
-    return ''
+    return {'response': 'success'}
 
 @analytics.trace
 def delete_notes(content):
     for id_ in content['ids']:
         # TODO(buckbaskin): implement note delete
         pass
-    return ''
+    return {'response': 'success'}
 
 #####
 
