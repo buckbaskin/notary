@@ -72,6 +72,7 @@ function displaySaved() {
 
 function syncNotes() {
 	console.log('sync notes');
+
 	var xmlhttp = new XMLHttpRequest();
 	var url = '/n.json';
 
