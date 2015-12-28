@@ -28,7 +28,7 @@ def notes():
 
 @analytics.trace
 @server.route('/n.json', methods=['GET'])
-def get_all_notes():
+def get_notes():
     vm = {}
     cursor = Note.get_all()
     notes = []
@@ -38,39 +38,14 @@ def get_all_notes():
     return json.dumps(notes)
 
 @analytics.trace
-@server.route('/n.json', methods=['POST'])
-def operate_notes():
-    content = request.get_json()
-    if 'action' not in content:
-        return ''
-    else:
-        if content['action'] == 'create':
-            return create_note()
-        elif content['action'] == 'readone':
-            return get_note(content['_id'])
-        elif content['action'] == 'read':
-            if '_id' in content:
-                return get_note(content['_id'])
-            else:
-                return get_notes(content)
-        elif content['action'] == 'readmany':
-            return get_notes(content)
-        elif content['action'] == 'update':
-            return update_note(content)
-        elif content['action'] == 'delete':
-            return delete_notes(content)
-        else:
-            return ''
-
-#####
-
-@analytics.trace
+@server.route('/notes', methods=['POST'])
 def create_note():
     new_id = Note.create_one()
     return note_json(new_id)
 
 @analytics.trace
-def get_note(note_id):
+@server.route('/n/<note_id>.json', methods=['GET'])
+def note_json(note_id):
     # do something with json
     print('type?: '+str(type(note_id)))
     print('id?  : '+str(note_id))
@@ -84,25 +59,18 @@ def get_note(note_id):
     return json_
 
 @analytics.trace
-def get_notes(content):
-    pass
-
-@analytics.trace
-def update_note(content):
+@server.route('/n/<note_id>.json', methods=['POST'])
+def update_note(note_id):
     # do something with incoming json to server
     # this is where I'd do the note delta/version control
     # this may also include delete inforamtion
-    for note in content['notes']:
-        result = Note.update_one(note['_id'], note['title'], note['meta'], note['content'])
-    return ''
-
-@analytics.trace
-def delete_notes(content):
-    for id_ in content['ids']:
-        pass
-    return ''
-
-#####
+    print('note_id', note_id)
+    content = request.get_json()
+    print('content title: ', content['title'])
+    print('content meta: ', content['meta'])
+    print('content cont: ', content['content'])
+    result = Note.update_one(note_id, content['title'], content['meta'], content['content'])
+    return note_json(note_id)
 
 @analytics.trace
 @server.errorhandler(404)
