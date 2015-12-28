@@ -56,7 +56,7 @@ def operate_notes():
         elif content['action'] == 'readmany':
             return get_notes(content)
         elif content['action'] == 'update':
-            return update_note(content)
+            return update_notes(content)
         elif content['action'] == 'delete':
             return delete_notes(content)
         else:
@@ -72,15 +72,9 @@ def create_note():
 @analytics.trace
 def get_note(note_id):
     # do something with json
-    print('type?: '+str(type(note_id)))
-    print('id?  : '+str(note_id))
     note = Note.get_one(note_id)
-    print('type?: '+str(type(note)))
-    print('note?: '+str(note))
-    print('note[]? '+str(note['_id']))
     note['_id'] = str(note['_id'])
     json_ = json.dumps(note)
-    print('json_: '+str(json_))
     return json_
 
 @analytics.trace
@@ -90,18 +84,18 @@ def get_notes(content):
     return json.dumps(notes)
 
 @analytics.trace
-def update_note(content):
+def update_notes(content):
     # TODO(buckbaskin): this is where I'd do the note delta/version control
     for note in content['notes']:
         result = Note.update_one(note['_id'], note['title'], note['meta'], note['content'])
-    return {'response': 'success'}
+    return json.dumps({'response': 'success'})
 
 @analytics.trace
 def delete_notes(content):
     for id_ in content['ids']:
         # TODO(buckbaskin): implement note delete
         pass
-    return {'response': 'success'}
+    return json.dumps({'response': 'success'})
 
 #####
 
