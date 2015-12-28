@@ -17,23 +17,15 @@ function saveAllEdits() {
 function postNoteJSON(id_, title, meta, content) {
 	console.log('Saving note: '+id_+'\nTitle: '+title+'\nMeta: '+meta+'');
 
-	var xmlhttp = new XMLHttpRequest();
-	var url = '/n/'+id_+'.json';
-
-	// var json_out = '{'+'"title" : '+title+', "meta" : '+meta+', "content" : '+content+' }'
 	var myData = {
 		"title" : title,
 		"meta" : meta,
 		"content" : content
 	};
-
 	var myJson = JSON.stringify(myData);
-	console.log(myJson);
 	
-	xmlhttp.open("POST", url, true);
-	xmlhttp.setRequestHeader('Content-Type', 'application/json');
 
-	xmlhttp.onreadystatechange = function() {
+	request("POST", 'json', '/n.json', function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			var from_json = JSON.parse( xmlhttp.responseText );
 			console.log(from_json);
@@ -43,10 +35,7 @@ function postNoteJSON(id_, title, meta, content) {
 			document.getElementById("note-content").innerHTML = from_json.content;
 			console.log('returned values were set');
 		}
-	};
-
-	console.log(url);
-	xmlhttp.send(myJson);
+	}, myJson);
 }
 
 function updateListItem(id_, title, meta, content) {
@@ -73,11 +62,7 @@ function displaySaved() {
 function syncNotes() {
 	console.log('sync notes');
 
-	var xmlhttp = new XMLHttpRequest();
-	var url = '/n.json';
-
-	xmlhttp.open("GET", url, true);
-	xmlhttp.onreadystatechange = function() {
+	request("GET", 'json', '/n.json', function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			var notes_from_json = JSON.parse( xmlhttp.responseText );
 			if (window.notes === undefined) {
@@ -90,10 +75,7 @@ function syncNotes() {
 			console.log(notes);
 			updateListView();
 		}
-	};
-
-	console.log(url);
-	xmlhttp.send();
+	}, '');
 }
 
 function updateListView() {
@@ -244,7 +226,7 @@ function meta_to_string(req) {
 	return res;
 }
 
-function request(request, type, url, json, action, send) {
+function request(request, type, url, action, send) {
 	var xmlhttp = new XMLHttpRequest();
 	
 	xmlhttp.open(request, url, true);
@@ -254,5 +236,5 @@ function request(request, type, url, json, action, send) {
 
 	xmlhttp.onreadystatechange = action
 
-	xmlhttp.send('');
+	xmlhttp.send(send);
 }
