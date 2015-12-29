@@ -8,6 +8,7 @@ db = client.notary_database
 class Schema(object):
     collection = 'default'
 
+    @staticmethod
     def to_mongo():
         return {'version' : 0}
 
@@ -42,6 +43,11 @@ class Schema(object):
 
 class Note(Schema):
     collection = 'notes'
+    valid_sorts = {
+        'title': 1,
+        'meta': 1,
+        'content': 1
+    }
 
     @staticmethod
     def to_mongo(title, meta, content, version=0):
@@ -57,15 +63,24 @@ class Note(Schema):
         return newm
 
     @staticmethod
-    def get_all():
+    def get_all(sort=None):
         collection = getattr(db, Note.collection)
-        cursor = collection.find()
+        if sort in Note.valid_sorts:
+            if sort[:1] == '-':
+                sort = sort[1:]
+                order = -1
+            else:
+                order = 1
+            cursor = collection.find().sort({sort : order})
+        else:
+            cursor = collection.find()
         return cursor
 
     @staticmethod
     def update_one(id_, title, meta, content):
         collection = getattr(db, Note.collection)
-        result = collection.update_one({
+        #TODO(buckbaskin): use the unused result to check for errors in update
+        _ = collection.update_one({
             '_id' : ObjectId(id_)
         },
         {

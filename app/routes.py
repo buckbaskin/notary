@@ -16,7 +16,7 @@ def index():
 
 @analytics.trace
 @server.route('/notes', methods=['GET'])
-def notes():
+def notes_html():
     vm = {}
     vm['title'] = 'Your Notes'
     cursor = Note.get_all()
@@ -29,7 +29,6 @@ def notes():
 @analytics.trace
 @server.route('/n.json', methods=['GET'])
 def get_all_notes():
-    vm = {}
     cursor = Note.get_all()
     notes = []
     for note in cursor:
@@ -46,15 +45,8 @@ def operate_notes():
     else:
         if content['action'] == 'create':
             return create_note()
-        elif content['action'] == 'readone':
-            return get_note(content['_id'])
-        elif content['action'] == 'read':
-            if '_id' in content:
-                return get_note(content['_id'])
-            else:
-                return get_notes(content)
-        elif content['action'] == 'readmany':
-            return get_notes(content)
+        elif len(content['action']) >= 4 and content['action'][:4] == 'read':
+            return select_read(content)
         elif content['action'] == 'update':
             return update_notes(content)
         elif content['action'] == 'delete':
@@ -67,7 +59,19 @@ def operate_notes():
 @analytics.trace
 def create_note():
     new_id = Note.create_one()
-    return note_json(new_id)
+    return get_note(new_id)
+
+@analytics.trace
+def select_read(content):
+    if content['action'] == 'readone':
+        return get_note(content['_id'])
+    elif content['action'] == 'read':
+        if '_id' in content:
+            return get_note(content['_id'])
+        else:
+            return get_notes(content)
+    elif content['action'] == 'readmany':
+        return get_notes(content)
 
 @analytics.trace
 def get_note(note_id):
@@ -80,14 +84,18 @@ def get_note(note_id):
 @analytics.trace
 def get_notes(content):
     #TODO(buckbaskin): this needs more implementation
-    notes = list(Note.get_all())
+    if 'sort_by' in content:
+        notes = list(Note.get_all(sort=content['sort_by']))
+    else:
+        notes = list(Note.get_all())
     return json.dumps(notes)
 
 @analytics.trace
 def update_notes(content):
     # TODO(buckbaskin): this is where I'd do the note delta/version control
     for note in content['notes']:
-        result = Note.update_one(note['_id'], note['title'], note['meta'], note['content'])
+        Note.update_one(note['_id'], note['title'], note['meta'], 
+            note['content'])
     return json.dumps({'response': 'success'})
 
 @analytics.trace
@@ -104,6 +112,7 @@ def delete_notes(content):
 def not_found_error(error):
     vm = {}
     vm['title'] = "something wasn't found"
+    vm['error'] = error
     return render_template('404.html', vm=vm), 404
 
 @analytics.trace
@@ -112,4 +121,5 @@ def internal_server_error(error):
     # db.session.rollback()
     vm = {}
     vm['title'] = "oops, the computer didn't computer"
+    vm['error'] = 'error'
     return render_template('500.html', vm=vm), 500
