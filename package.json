@@ -1,0 +1,23 @@
+{
+  "name": "notary",
+  "version": "0.1.0",
+  "description": "Notary, an Evernote clone",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/buckbaskin/notary.git"
+  },
+  "author": "Buck Baskin (https://twitter.com/@buckbaskin)",
+  "contributors": [
+    {
+      "name": "Buck Baskin",
+      "url": "https://twitter.com/buckbaskin"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/buckbaskin/notary/issues"
+  },
+  "homepage": "https://github.com/buckbaskin/notary",
+  "dependencies": {
+    "eslint-config-airbnb" : "latest"
+  }
+}
