@@ -25,12 +25,14 @@ function request(request, type, url, action, send) {
 }
 
 function postNoteJSON(id_, title, meta, content) {
-  console.log("Saving note: "+id_+"\nTitle: "+title+"\nMeta: "+meta+"");
-
-  var myData = {
+  var myNote = {
     "title" : title,
     "meta" : meta,
     "content" : content
+  };
+  var myData = {
+    'action': 'update', 
+    'notes': [ myNote ]
   };
   var myJson = JSON.stringify(myData);
   
@@ -70,7 +72,7 @@ function displaySaved() {
 
 /* jshint ignore:start */
 function buildNotePreviewToHtml(id_, title, meta, content) {
-  var str_ = '<div id="${id_}" class="row note-preview" onclick="loadNote( \'${id_}\' );">';
+  var str_ = `<div id="${id_}" class="row note-preview" onclick="loadNote( \'${id_}\' );">`;
   str_ = str_ + '<div class="intro-line">';
   str_ = str_ + '<h4>'+title+'</h4>';
   str_ = str_ + '<p> - |' + meta+ '|' +content +'|</p>';
@@ -133,8 +135,8 @@ function syncNotes() {
   request("POST", "json", "/n.json", function(res) {
     if (res.readyState === 4 && res.status === 200) {
       var response = JSON.parse( res.responseText );
-      if (response.result !== "success") {
-        console.log("syncNotes push error");
+      if (response.response !== "success") {
+        console.log(response);
       }
     }
   }, myJson);
