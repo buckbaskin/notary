@@ -41,7 +41,8 @@
   // Require capitalized names for constructor functions.
   "newcap": true,
 
-  // Enforce use of single quotation marks for strings.
+  // Enforce use of double quotation marks for strings.
+  // I prefer this to single quotes to be consistent with JSON
   "quotmark": "double",
 
   // Enforce placing 'use strict' at the top function scope
