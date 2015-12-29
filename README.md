@@ -31,8 +31,6 @@ $ python run.py
 
 #TODO
 
-- sync attempts to push changes first, then pull changes
-- add error handling/tracking. If a request is made where the function returns an error, it is recorded in the engagement.
 - when returning the get all information in python, allow post or get tag to specify what the ordering is (default is last updated first, but if there is a valid field specified in the post, get all)
   - sort the array in javascript so that last updated, is first, or last created, that kind of thingl
 - add in a script for viewing the aggregate information on page accesses/traced functions in the app. Non-GUI for now.

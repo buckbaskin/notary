@@ -59,20 +59,23 @@ function displaySaved() {
 }
 
 function syncNotes() {
-	console.log('sync notes');
-
+	
 	var data = { 
 		'action': 'update', 
 		'notes': notes,
 	};
 	var myJson = JSON.stringify(data);
 
+	console.log('sync push');
+
 	request("POST", 'json', '/n.json', function(res) {
 		if (res.readyState == 4 && res.status == 200) {
 			var response = JSON.parse( res.responseText );
-			console.log(response);
+			// console.log(response);
 		}
 	}, myJson);
+
+	console.log('sync pull');
 
 	request("GET", 'json', '/n.json', function(res) {
 		if (res.readyState == 4 && res.status == 200) {
@@ -84,7 +87,7 @@ function syncNotes() {
 			if (window.sort_by !== undefined) {
 				sortNotesByAttr(sort_by);
 			}
-			console.log(notes);
+			// console.log(notes);
 			updateListView();
 		}
 	}, '');
@@ -139,7 +142,7 @@ function createNewNote() {
 	request("POST", 'json', '/n.json', function(res) {
 		if (res.readyState == 4 && res.status == 200) {
 			var from_json = JSON.parse( res.responseText );
-			console.log(from_json);
+			// console.log(from_json);
 			id_ = from_json._id;
 			document.getElementById("note-title").innerHTML = from_json.title;
 			document.getElementById("note-meta").innerHTML = from_json.meta;
@@ -177,7 +180,7 @@ function loadNote(new_id) {
 	request("POST", 'json', '/n.json', function(res) {
 		if (res.readyState == 4 && res.status == 200) {
 			var from_json = JSON.parse( res.responseText );
-			console.log(from_json);
+			// console.log(from_json);
 			id_ = from_json._id;
 			title = from_json.title;
 			meta = from_json.meta;
@@ -212,7 +215,7 @@ function build_note_preview_to_html(id_, title, meta, content) {
 
 function string_to_meta(req) {
 	var res = req.split(", ");
-	console.log(res[res.length-1]);
+	// console.log(res[res.length-1]);
 	var meter = [];
 	for (var i = 0; i < res.length; i++) {
 		if (res[i] !== '') {
