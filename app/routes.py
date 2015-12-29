@@ -88,6 +88,8 @@ def get_notes(content):
         notes = list(Note.get_all(sort=content['sort_by']))
     else:
         notes = list(Note.get_all())
+    for note in notes:
+        note['_id'] = str(note['_id'])
     return json.dumps(notes)
 
 @analytics.trace

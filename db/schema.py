@@ -71,7 +71,8 @@ class Note(Schema):
                 order = -1
             else:
                 order = 1
-            cursor = collection.find().sort({sort : order})
+            print('sort: '+str(sort)+' order:' +str(order))
+            cursor = collection.find().sort([(sort, order)])
         else:
             cursor = collection.find()
         return cursor

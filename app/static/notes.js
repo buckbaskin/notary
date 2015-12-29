@@ -131,7 +131,7 @@ function syncNotes() {
   var myJson = JSON.stringify(data);
 
   console.log("sync push");
-  
+
   request("POST", "json", "/n.json", function(res) {
     if (res.readyState === 4 && res.status === 200) {
       var response = JSON.parse( res.responseText );
@@ -143,7 +143,15 @@ function syncNotes() {
 
   console.log("sync pull");
 
-  request("GET", "json", "/n.json", function(res) {
+  var control = {
+    "action": "readmany",
+    "sort_by": sortBy,
+    "page": 0,
+    "count": 100
+  };
+  var controlJson = JSON.stringify(control);
+
+  request("POST", "json", "/n.json", function(res) {
     if (res.readyState === 4 && res.status === 200) {
       var notesFromJSON = JSON.parse( res.responseText );
       if (window.notes === undefined) {
@@ -156,7 +164,7 @@ function syncNotes() {
       // console.log(notes);
       updateListView();
     }
-  }, "");
+  }, controlJson);
 }
 
 function stringToMeta(req) {
