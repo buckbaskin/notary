@@ -93,6 +93,7 @@ def get_notes(content):
 @analytics.trace
 def update_notes(content):
     # TODO(buckbaskin): this is where I'd do the note delta/version control
+    # print('updating %d notes' % len(content['notes']))
     for note in content['notes']:
         Note.update_one(note['_id'], note['title'], note['meta'],
             note['content'])

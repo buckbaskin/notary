@@ -126,17 +126,17 @@ function syncNotes() {
   
   var data = { 
     "action": "update", 
-    "notes": notes,
+    "notes": notes
   };
   var myJson = JSON.stringify(data);
 
   console.log("sync push");
-
+  
   request("POST", "json", "/n.json", function(res) {
     if (res.readyState === 4 && res.status === 200) {
       var response = JSON.parse( res.responseText );
       if (response.response !== "success") {
-        console.log(response);
+        console.log('sync push error');
       }
     }
   }, myJson);

@@ -97,7 +97,6 @@ class Note(Schema):
         id_ = ObjectId(id_)
         collection = getattr(db, Note.collection)
         data = collection.find_one({'_id': ObjectId(id_)})
-        print('data: '+str(data))
         return data
 
     @staticmethod
