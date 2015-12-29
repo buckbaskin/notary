@@ -94,7 +94,7 @@ def get_notes(content):
 def update_notes(content):
     # TODO(buckbaskin): this is where I'd do the note delta/version control
     for note in content['notes']:
-        Note.update_one(note['_id'], note['title'], note['meta'], 
+        Note.update_one(note['_id'], note['title'], note['meta'],
             note['content'])
     return json.dumps({'response': 'success'})
 
@@ -121,5 +121,5 @@ def internal_server_error(error):
     # db.session.rollback()
     vm = {}
     vm['title'] = "oops, the computer didn't computer"
-    vm['error'] = 'error'
+    vm['error'] = error
     return render_template('500.html', vm=vm), 500
