@@ -1,17 +1,27 @@
 "use strict";
 
 var notes = [];
+var sortBy = "title";
+var title = "";
+var meta = [];
+var content = "";
+if (window.id_ === undefined) {
+  var id_ = "567dff3599b4971e04354410";
+}
 
-function saveAllEdits() {
-  var title = document.getElementById("note-title").innerHTML;
-  var metaStr = document.getElementById("note-meta").innerHTML;
-  var meta = string_to_meta(metaStr);
-  var count = document.getElementById("note-content").innerHTML;
+function request(request, type, url, action, send) {
+  var xmlhttp = new XMLHttpRequest();
+  
+  xmlhttp.open(request, url, true);
+  if (type === "json") {
+    xmlhttp.setRequestHeader("Content-Type", "application/json");
+  }
 
-  postNoteJSON(id_, title, meta, count);
-  updateListItem(id_, title, meta, count);
-  displaySaved();
-  syncNotes();
+  xmlhttp.onreadystatechange = function () {
+    action(xmlhttp);
+  };
+
+  xmlhttp.send(send);
 }
 
 function postNoteJSON(id_, title, meta, content) {
@@ -25,13 +35,13 @@ function postNoteJSON(id_, title, meta, content) {
   var myJson = JSON.stringify(myData);
   
   request("POST", "json", "/n.json", function(res) {
-    if (res.readyState == 4 && res.status == 200) {
-      var from_json = JSON.parse( res.responseText );
-      console.log(from_json);
-      id_ = from_json._id;
-      document.getElementById("note-title").innerHTML = from_json.title;
-      document.getElementById("note-meta").innerHTML = from_json.meta;
-      document.getElementById("note-content").innerHTML = from_json.content;
+    if (res.readyState === 4 && res.status === 200) {
+      var fromJSON = JSON.parse( res.responseText );
+      console.log(fromJSON);
+      id_ = fromJSON._id;
+      document.getElementById("note-title").innerHTML = fromJSON.title;
+      document.getElementById("note-meta").innerHTML = fromJSON.meta;
+      document.getElementById("note-content").innerHTML = fromJSON.content;
       console.log("returned values were set");
     }
   }, myJson);
@@ -58,55 +68,33 @@ function displaySaved() {
   }, 1000);
 }
 
-function syncNotes() {
-  
-  var data = { 
-    "action": "update", 
-    "notes": notes,
-  };
-  var myJson = JSON.stringify(data);
-
-  console.log("sync push");
-
-  request("POST", "json", "/n.json", function(res) {
-    if (res.readyState == 4 && res.status == 200) {
-      var response = JSON.parse( res.responseText );
-      // console.log(response);
-    }
-  }, myJson);
-
-  console.log("sync pull");
-
-  request("GET", "json", "/n.json", function(res) {
-    if (res.readyState == 4 && res.status == 200) {
-      var notes_from_json = JSON.parse( res.responseText );
-      if (window.notes === undefined) {
-        window.notes = [];
-      }
-      notes = notes_from_json;
-      if (window.sort_by !== undefined) {
-        sortNotesByAttr(sort_by);
-      }
-      // console.log(notes);
-      updateListView();
-    }
-  }, "");
+/* jshint ignore:start */
+function buildNotePreviewToHtml(id_, title, meta, content) {
+  var str_ = '<div id="${id_}" class="row note-preview" onclick="loadNote( \'${id_}\' );">';
+  str_ = str_ + '<div class="intro-line">';
+  str_ = str_ + '<h4>'+title+'</h4>';
+  str_ = str_ + '<p> - |' + meta+ '|' +content +'|</p>';
+  str_ = str_ + '</div></div>';
+  return str_;
 }
+/* jshint ignore:end */
 
 function updateListView() {
   console.log("updating note-selector view");
   var accum = "";
   var str_ = "";
   for (var i = 0; i < notes.length; i++) {
-    note1 = notes[i];
-    str_ = build_note_preview_to_html(note1._id, note1.title, note1.meta, note1.content);
+    var note1 = notes[i];
+    str_ = buildNotePreviewToHtml( // jshint ignore:line
+      note1._id, note1.title, note1.meta, note1.content
+    );
     accum = accum + str_;
   }
   document.getElementById("notes-list").innerHTML = accum;
 }
 
 function sortNotesByAttr(attr) {
-  window.sort_by = attr;
+  window.sortBy = attr;
   if (attr === "title" || attr === "content") {
     notes = notes.sort(function(a, b) {
       if (a[attr] > b[attr]) {
@@ -132,90 +120,44 @@ function sortNotesByAttr(attr) {
   updateListView();
 }
 
-function createNewNote() {
-  syncNotes();
+function syncNotes() {
   
-  var url = "/n.json";
-  var data = { "action": "create" };
+  var data = { 
+    "action": "update", 
+    "notes": notes,
+  };
   var myJson = JSON.stringify(data);
-  
+
+  console.log("sync push");
+
   request("POST", "json", "/n.json", function(res) {
-    if (res.readyState == 4 && res.status == 200) {
-      var from_json = JSON.parse( res.responseText );
-      // console.log(from_json);
-      id_ = from_json._id;
-      document.getElementById("note-title").innerHTML = from_json.title;
-      document.getElementById("note-meta").innerHTML = from_json.meta;
-      document.getElementById("note-content").innerHTML = from_json.content;
-      console.log("returned values were set");
-    }
-  }, myJson);
-
-  syncNotes();
-}
-
-function loadNote(new_id) {
-  syncNotes();
-  if (window.sort_by !== undefined) {
-    sortNotesByAttr(sort_by);
-  }
-  if (window.notes !== undefined) {
-    for (var i = window.notes.length - 1; i >= 0; i--) {
-      note_candidate = window.notes[i];
-      if (note_candidate._id === new_id) {
-        id_ = new_id;
-        title = note_candidate.title;
-        meta = note_candidate.meta;
-        content = note_candidate.content;
-        console.log("returned values were set from local values");
-        refreshView();
-        return;
+    if (res.readyState === 4 && res.status === 200) {
+      var response = JSON.parse( res.responseText );
+      if (response.result !== "success") {
+        console.log("syncNotes push error");
       }
     }
-  }
-
-  var data = { "action":"readone", "_id": new_id };
-  var myJson = JSON.stringify(data);
-
-  request("POST", "json", "/n.json", function(res) {
-    if (res.readyState == 4 && res.status == 200) {
-      var from_json = JSON.parse( res.responseText );
-      // console.log(from_json);
-      id_ = from_json._id;
-      title = from_json.title;
-      meta = from_json.meta;
-      content = from_json.content;
-      refreshView();
-      console.log("returned values were set");
-    }
   }, myJson);
+
+  console.log("sync pull");
+
+  request("GET", "json", "/n.json", function(res) {
+    if (res.readyState === 4 && res.status === 200) {
+      var notesFromJSON = JSON.parse( res.responseText );
+      if (window.notes === undefined) {
+        window.notes = [];
+      }
+      notes = notesFromJSON;
+      if (window.sortBy !== undefined) {
+        sortNotesByAttr(sortBy);
+      }
+      // console.log(notes);
+      updateListView();
+    }
+  }, "");
 }
 
-function refreshView() {
-  if (window.title !== undefined) {
-    document.getElementById("note-title").innerHTML = title;
-  }
-  if (window.meta !== undefined) {
-    document.getElementById("note-meta").innerHTML = meta_to_string(meta);
-  }
-  if (window.content !== undefined) {
-    document.getElementById("note-content").innerHTML = content;
-  }
-  console.log("view updated");
-}
-
-function build_note_preview_to_html(id_, title, meta, content) {
-  /* jshint ignore:start */
-  var str_ = '<div id="'+id_+'" class="row note-preview" onclick="loadNote( \''+ id_ + '\' );">';
-  str_ = str_ + '<div class="intro-line">';
-  str_ = str_ + '<h4>'+title+'</h4>';
-  str_ = str_ + '<p> - |' + meta+ '|' +content +'|</p>';
-  str_ = str_ + '</div></div>';
-  return str_;
-  /* jshint ignore:end */
-}
-
-function string_to_meta(req) {
+function stringToMeta(req) {
   var res = req.split(", ");
   // console.log(res[res.length-1]);
   var meter = [];
@@ -227,7 +169,40 @@ function string_to_meta(req) {
   return meter;
 }
 
-function meta_to_string(req) {
+function saveAllEdits() {
+  var title = document.getElementById("note-title").innerHTML;
+  var metaStr = document.getElementById("note-meta").innerHTML;
+  var meta = stringToMeta(metaStr);
+  var count = document.getElementById("note-content").innerHTML;
+
+  postNoteJSON(id_, title, meta, count);
+  updateListItem(id_, title, meta, count);
+  displaySaved();
+  syncNotes();
+}
+
+function createNewNote() {
+  syncNotes();
+  
+  var data = { "action": "create" };
+  var myJson = JSON.stringify(data);
+  
+  request("POST", "json", "/n.json", function(res) {
+    if (res.readyState === 4 && res.status === 200) {
+      var fromJSON = JSON.parse( res.responseText );
+      // console.log(fromJSON);
+      id_ = fromJSON._id;
+      document.getElementById("note-title").innerHTML = fromJSON.title;
+      document.getElementById("note-meta").innerHTML = fromJSON.meta;
+      document.getElementById("note-content").innerHTML = fromJSON.content;
+      console.log("returned values were set");
+    }
+  }, myJson);
+
+  syncNotes();
+}
+
+function metaToString(req) {
   var res = "";
   for (var i = 0; i < req.length; i++) {
     res = res+req[i] + ", ";
@@ -235,17 +210,52 @@ function meta_to_string(req) {
   return res;
 }
 
-function request(request, type, url, action, send) {
-  var xmlhttp = new XMLHttpRequest();
-  
-  xmlhttp.open(request, url, true);
-  if (type === "json") {
-    xmlhttp.setRequestHeader("Content-Type", "application/json");
+function refreshView() {
+  if (window.title !== undefined) {
+    document.getElementById("note-title").innerHTML = title;
+  }
+  if (window.meta !== undefined) {
+    document.getElementById("note-meta").innerHTML = metaToString(meta);
+  }
+  if (window.content !== undefined) {
+    document.getElementById("note-content").innerHTML = content;
+  }
+  console.log("view updated");
+}
+
+function loadNote(newId) {
+  syncNotes();
+  if (window.sortBy !== undefined) {
+    sortNotesByAttr(sortBy);
+  }
+  if (window.notes !== undefined) {
+    for (var i = window.notes.length - 1; i >= 0; i--) {
+      var noteCandidate = window.notes[i];
+      if (noteCandidate._id === newId) {
+        id_ = newId;
+        title = noteCandidate.title;
+        meta = noteCandidate.meta;
+        content = noteCandidate.content;
+        console.log("returned values were set from local values");
+        refreshView();
+        return;
+      }
+    }
   }
 
-  xmlhttp.onreadystatechange = function () {
-    action(xmlhttp);
-  };
+  var data = { "action":"readone", "_id": newId };
+  var myJson = JSON.stringify(data);
 
-  xmlhttp.send(send);
+  request("POST", "json", "/n.json", function(res) {
+    if (res.readyState === 4 && res.status === 200) {
+      var fromJSON = JSON.parse( res.responseText );
+      // console.log(fromJSON);
+      id_ = fromJSON._id;
+      title = fromJSON.title;
+      meta = fromJSON.meta;
+      content = fromJSON.content;
+      refreshView();
+      console.log("returned values were set");
+    }
+  }, myJson);
 }
