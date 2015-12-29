@@ -1,3 +1,5 @@
+"use strict";
+/* jshint ignore:start */
 function meta_to_string(req) {
 	var res = '';
 	for (var i = 0; i < req.length; i++) {
@@ -25,3 +27,4 @@ res.push(3);
 
 console.log(meta_to_string(res));
 console.log(string_to_meta(meta_to_string(res)));
+/* jshint ignore:end */
