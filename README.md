@@ -44,3 +44,5 @@ $ python run.py
   - color by function return (green for page, blue for json, orange for null, red for error)
 
 # TODO to-sort
+- after implementing the scope object, update view every time the hash of the object changes? or override set attribute to update the view
+  - I wouldn't mind running the hash check every second or so, and then updating the view. This might be nice to pair with the async push changes queue
