@@ -31,7 +31,6 @@ $ python run.py
 
 #TODO
 
-- add in a script for viewing the aggregate information on page accesses/traced functions in the app. Non-GUI for now.
 - add a date-created, date-last-updated field to the note specification
   - include a human readable short version, ex. Mar 5, 2015
   - include a human readable long version, ex. 2:15pm Mar 5, 2015
@@ -46,3 +45,6 @@ $ python run.py
 # TODO to-sort
 - after implementing the scope object, update view every time the hash of the object changes? or override set attribute to update the view
   - I wouldn't mind running the hash check every second or so, and then updating the view. This might be nice to pair with the async push changes queue
+- use flask-sessions/cookies to track which users are making which requests/accesses
+  - modify the analysis script to sort accesses by user ID
+- implement users (in Mongo for now). Users have a username, password, email?, created date, last login date, unique user id
