@@ -1,8 +1,11 @@
 # Proposed API Actions (based on Evernote API)
 
+## Authentication Token
+A string that is generated from a login, which is then valid for a few minutes and can be sent back to authenticate the application
+
 ## Notes
 
-### create note (`atoken, list of <note info>`)
+### create notes (`authentication token, list of <note info>`)
 Create new notes based on the given information. If nothing is provided, the default note values are instantiated.
 - title
 - meta
@@ -11,17 +14,57 @@ Create new notes based on the given information. If nothing is provided, the def
 - private share
 Returns the list of `<new note id>s`
 
-### copy note (`authentication token, note id, target Notebook`)
+### copy note (`atoken, note id, target Notebook`)
 Copy the existing note to the target notebook
 Returns the new note id
 
-## update notes (`atoken, list of <note info>`)
-Push the provided into into the given note
+### get note offset (`atoken, note id, note set`)
+Find the position of a note in the given set. A set is a combinations of a notebook (1 or 0) and arbitrarily many tags, and ordered by a given attribute (default is last updated). A note set contains:
+- notebook: notebook guid
+- tags: list of tag ids
+- sort: sort order (title, meta, content, created, updated)
+- sort ascending: 1 or -1
+Returns the integer offset (0 for first note)
+
+### get note ids (`atoken, set`)
+Find the notes that are in the set. A set is a combinations of a notebook (1 or 0) and arbitrarily many tags, and ordered by a given attribute (default is last updated). A note set contains:
+- notebook: notebook guid
+- tags: list of tag ids
+- sort: sort order (title, meta, content, created, updated)
+- sort ascending: 1 or -1
+Returns a list of the ids of notes in the set.
+
+### get notes (`atoken, list of <note id>`)
+Returns the note title, metadata and contents as a json object.
+
+### get note by version (`atoken, <note id>, version`)
+Returns the note at the specified version. version is an incrementing integer, and invalid version defaults to latest version.
+
+### get note versions (`atoken, list of <note id>`)
+Returns a list of the maximum version of the given note ids.
+
+### get notes sharing info (`atoken, list of <note info>`)
+Return a list of pairs of [private, public] share link strings. If they are empty, the note is note shared that way.
+
+### get searchable notes (`atoken, list of <note id>, options`)
+Options:
+- delimiter: delimiter string
+- as list: returns a list instead of delimited string
+- tokens: returns as a dict of tokens, with their count
+Returns a space delimited version of the note that is designed to be indexed or searched on the client. This can be converted to a list of tokens by spliting on the spaces.
+
+### update notes (`atoken, list of <note info>`)
+Push the provided info into the given note.
 Returns `{ 'results' : number of successful updates }`
 
 ### trash notes (`atoken, list of <note id>`)
 Send the given notes to the trash
-Returns `{ 'results' : number of successful updates }`
+Returns `{ 'results' : number of successful notes trashed }`
+
+### email notes (`atoken, email info, list of <note id>`)
+Send the given notes to the given email address
+Returns `{ 'results' : number of successful notes emailed }`
+
 
 ## Notebooks
 
