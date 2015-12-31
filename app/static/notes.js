@@ -35,9 +35,9 @@ function metaToTags(meta) {
 }
 
 function metaToString(req) {
-  var created_str = req["created"];
-  var updated_str = req["updated"];
-  var due_date_str = req["due_date"];
+  // var createdStr = req.created;
+  // var updatedStr = req.updated;
+  // var dueDateStr = req.due_date; // jshint ignore:line
   var res = metaToTags(req);
   return res;
 }

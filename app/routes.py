@@ -1,9 +1,11 @@
+# pylint: disable=superfluous-parens
+
 from app import server
 from flask import render_template
 from flask import request
 
 import json
-import dateutil.parser
+import dateutil.parser as dateparser
 
 import analytics
 from db import Note
@@ -22,7 +24,7 @@ def notes_html():
     vm['title'] = 'Your Notes'
     cursor = Note.get_all()
     vm['notes'] = []
-    
+
     for note in cursor:
         vm['notes'].append(clean_note_for_json(note))
     return render_template('notes.html', vm=vm)
@@ -32,7 +34,7 @@ def notes_html():
 def get_all_notes():
     cursor = Note.get_all()
     notes = []
-    
+
     for note in cursor:
         notes.append(clean_note_for_json(note))
     return json.dumps(notes)
@@ -100,11 +102,11 @@ def get_notes(content):
         cursor = Note.get_all(sort=content['sort_by'])
     else:
         cursor = Note.get_all()
-    
+
     notes = []
     for note in cursor:
         notes.append(clean_note_for_json(note))
-    
+
     print('notesl '+str(len(notes)))
     return json.dumps(notes)
 
@@ -116,7 +118,6 @@ def update_notes(content):
         note = clean_note_from_json(note)
         Note.update_one(note['_id'], note['title'], note['meta'],
             note['content'])
-    print('update response: ',json.dumps({'response': 'success'}))
     return json.dumps({'response': 'success'})
 
 @analytics.trace
@@ -129,13 +130,13 @@ def delete_notes(content):
 def clean_note_from_json(note):
     if 'updated' in note['meta']:
         if isinstance(note['meta']['updated'], str):
-            note['meta']['updated'] = dateutil.parser.parse(note['meta']['updated'])
+            note['meta']['updated'] = dateparser.parse(note['meta']['updated'])
     if 'created' in note['meta']:
         if isinstance(note['meta']['created'], str):
-            note['meta']['created'] = dateutil.parser.parse(note['meta']['created'])
+            note['meta']['created'] = dateparser.parse(note['meta']['created'])
     if 'due_date' in note['meta']:
         if isinstance(note['meta']['due_date'], str):
-            note['meta']['due_date'] = dateutil.parser.parse(note['meta']['due_date'])
+            note['meta']['due_date'] = dateparser.parse(note['meta']['due_date']) # pylint: disable=line-too-long
     return note
 
 def clean_note_for_json(note):
