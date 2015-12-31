@@ -30,9 +30,13 @@ function request(request, type, url, action, send) {
 }
 
 function metaToString(req) {
+  var tags = req.tags;
+  var created_str = req["created"];
+  var updated_str = req["updated"];
+  var due_date_str = req["due_date"];
   var res = "";
-  for (var i = 0; i < req.length; i++) {
-    res = res+req[i] + ", ";
+  for (var i = 0; i < tags.length; i++) {
+    res = res+tags[i] + ", ";
   }
   return res;
 }
@@ -65,7 +69,6 @@ function postNoteJSON(id_, title, meta, content) {
   request("POST", "json", "/n.json", function(res) {
     if (res.readyState === 4 && res.status === 200) {
       var fromJSON = JSON.parse( res.responseText );
-      console.log(fromJSON);
       id_ = fromJSON._id;
       title = fromJSON.title;
       meta = fromJSON.meta;
@@ -181,7 +184,6 @@ function syncNotes() {
   request("POST", "json", "/n.json", function(res) {
     if (res.readyState === 4 && res.status === 200) {
       var notesFromJSON = JSON.parse( res.responseText );
-      console.log(notesFromJSON.length)
       if (window.notes === undefined) {
         window.notes = [];
       }
@@ -189,7 +191,6 @@ function syncNotes() {
       if (window.sortBy !== undefined) {
         sortNotesByAttr(sortBy);
       }
-      // console.log(notes);
       updateListView();
     }
   }, controlJson);
@@ -197,14 +198,14 @@ function syncNotes() {
 
 function stringToMeta(req) {
   var res = req.split(", ");
-  // console.log(res[res.length-1]);
   var meter = [];
   for (var i = 0; i < res.length; i++) {
     if (res[i] !== "") {
       meter.push(res[i]);
     }
   }
-  return meter;
+  meta.tags = meter;
+  return meta;
 }
 
 function saveAllEdits() {
@@ -228,7 +229,6 @@ function createNewNote() {
   request("POST", "json", "/n.json", function(res) {
     if (res.readyState === 4 && res.status === 200) {
       var fromJSON = JSON.parse( res.responseText );
-      // console.log(fromJSON);
       id_ = fromJSON._id;
       document.getElementById("note-title").innerHTML = fromJSON.title;
       document.getElementById("note-meta").innerHTML = fromJSON.meta;
@@ -266,7 +266,6 @@ function loadNote(newId) {
   request("POST", "json", "/n.json", function(res) {
     if (res.readyState === 4 && res.status === 200) {
       var fromJSON = JSON.parse( res.responseText );
-      // console.log(fromJSON);
       id_ = fromJSON._id;
       title = fromJSON.title;
       meta = fromJSON.meta;
