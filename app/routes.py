@@ -3,6 +3,7 @@ from flask import render_template
 from flask import request
 
 import json
+import dateutil.parser
 
 import analytics
 from db import Note
@@ -22,8 +23,7 @@ def notes_html():
     cursor = Note.get_all()
     vm['notes'] = []
     for note in cursor:
-        note['_id'] = str(note['_id'])
-        vm['notes'].append(dict(note))
+        vm['notes'].append(clean_note_for_json(note))
     return render_template('notes.html', vm=vm)
 
 @analytics.trace
@@ -32,8 +32,7 @@ def get_all_notes():
     cursor = Note.get_all()
     notes = []
     for note in cursor:
-        note['_id'] = str(note['_id'])
-        notes.append(note)
+        notes.append(clean_note_for_json(note))
     return json.dumps(notes)
 
 @analytics.trace
@@ -77,8 +76,7 @@ def select_read(content):
 def get_note(note_id):
     # do something with json
     note = Note.get_one(note_id)
-    note['_id'] = str(note['_id'])
-    json_ = json.dumps(note)
+    json_ = json.dumps(clean_note_for_json(note))
     return json_
 
 @analytics.trace
@@ -89,7 +87,7 @@ def get_notes(content):
     else:
         notes = list(Note.get_all())
     for note in notes:
-        note['_id'] = str(note['_id'])
+        notes.append(clean_note_for_json(note))
     return json.dumps(notes)
 
 @analytics.trace
@@ -97,6 +95,7 @@ def update_notes(content):
     # TODO(buckbaskin): this is where I'd do the note delta/version control
     # print('updating %d notes' % len(content['notes']))
     for note in content['notes']:
+        note = clean_note_from_json(note)
         Note.update_one(note['_id'], note['title'], note['meta'],
             note['content'])
     return json.dumps({'response': 'success'})
@@ -107,6 +106,34 @@ def delete_notes(content):
         # TODO(buckbaskin): implement note delete
         pass
     return json.dumps({'response': 'success'})
+
+def clean_note_from_json(note):
+    if 'updated' in note['meta']:
+        if isinstance(note['meta']['updated'], str):
+            note['meta']['updated'] = dateutil.parser.parse(note['meta']['updated'])
+    if 'created' in note['meta']:
+        if isinstance(note['meta']['created'], str):
+            note['meta']['created'] = dateutil.parser.parse(note['meta']['created'])
+    if 'due_date' in note['meta']:
+        if isinstance(note['meta']['due_date'], str):
+            note['meta']['due_date'] = dateutil.parser.parse(note['meta']['due_date'])
+    return note
+
+def clean_note_for_json(note):
+    note['_id'] = str(note['_id'])
+    if isinstance(note['meta'], (dict,)):
+        if 'updated' in note['meta']:
+            if not isinstance(note['meta']['updated'], str):
+                note['meta']['updated'] = note['meta']['updated'].isoformat()
+        if 'created' in note['meta']:
+            if not isinstance(note['meta']['created'], str):
+                note['meta']['created'] = note['meta']['created'].isoformat()
+        if 'due_date' in note['meta']:
+            if note['meta']['due_date'] is None:
+                del note['meta']['due_date']
+            elif not isinstance(note['meta']['due_date'], str):
+                note['meta']['due_date'] = note['meta']['due_date'].isoformat()
+    return note
 
 #####
 

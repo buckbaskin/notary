@@ -63,7 +63,7 @@ class Note(Schema):
                 'created': created,
                 'updated': datetime.datetime.utcnow(),
                 'due_date': None
-            }
+            },
             'content': content,
         }
         newm = dict(base, **add_)
@@ -80,16 +80,29 @@ class Note(Schema):
                 order = -1
             else:
                 order = 1
-            print('sort: ' + str(sort) + ' order:' + str(order))
+            # print('sort: ' + str(sort) + ' order:' + str(order))
             cursor = collection.find().sort([(sort, order)])
         else:
             cursor = collection.find()
         return cursor
 
     @staticmethod
-    def update_one(id_, title, meta, content, due_date=None):
+    def update_one(id_, title, meta, content):
         collection = getattr(db, Note.collection)
         # TODO(buckbaskin): use the unused result to check for errors in update
+
+        # use this to update old style metadata to new form factor
+        if isinstance(meta, (list, )):
+            meta_ = {}
+            meta_['tags'] = list(meta)
+            meta = dict(meta_)
+        if 'due_date' not in meta:
+            meta['due_date'] = None
+        if 'created' not in meta:
+            meta['created'] = datetime.datetime.utcnow()
+        if 'updated' not in meta:
+            meta['updated'] = datetime.datetime.utcnow()
+
         _ = collection.update_one({
             '_id': ObjectId(id_)
             },
@@ -97,9 +110,13 @@ class Note(Schema):
                 '$set': {
                     'title': title,
                     'meta': meta,
-                    'content': content,
-                    'meta.due_date': due_date
-                },
+                    'content': content
+                }
+            })
+        _ = collection.update_one({
+            '_id': ObjectId(id_)
+            },
+            {
                 '$currentDate': {
                     'meta.updated': True
                 }

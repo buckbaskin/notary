@@ -3,7 +3,12 @@
 var notes = [];
 var sortBy = "title";
 var title = "";
-var meta = [];
+var meta = {
+    "tags" : [],
+    "created" : Date.now(),
+    "updated" : Date.now(),
+    "due_date" : undefined
+  };
 var content = "";
 if (window.id_ === undefined) {
   var id_ = "567dff3599b4971e04354410";
@@ -24,6 +29,27 @@ function request(request, type, url, action, send) {
   xmlhttp.send(send);
 }
 
+function metaToString(req) {
+  var res = "";
+  for (var i = 0; i < req.length; i++) {
+    res = res+req[i] + ", ";
+  }
+  return res;
+}
+
+function refreshView() {
+  if (window.title !== undefined) {
+    document.getElementById("note-title").innerHTML = title;
+  }
+  if (window.meta !== undefined) {
+    document.getElementById("note-meta").innerHTML = metaToString(meta);
+  }
+  if (window.content !== undefined) {
+    document.getElementById("note-content").innerHTML = content;
+  }
+  console.log("view updated");
+}
+
 function postNoteJSON(id_, title, meta, content) {
   var myNote = {
     "title" : title,
@@ -31,8 +57,8 @@ function postNoteJSON(id_, title, meta, content) {
     "content" : content
   };
   var myData = {
-    'action': 'update', 
-    'notes': [ myNote ]
+    "action": "update", 
+    "notes": [ myNote ]
   };
   var myJson = JSON.stringify(myData);
   
@@ -41,10 +67,10 @@ function postNoteJSON(id_, title, meta, content) {
       var fromJSON = JSON.parse( res.responseText );
       console.log(fromJSON);
       id_ = fromJSON._id;
-      document.getElementById("note-title").innerHTML = fromJSON.title;
-      document.getElementById("note-meta").innerHTML = fromJSON.meta;
-      document.getElementById("note-content").innerHTML = fromJSON.content;
-      console.log("returned values were set");
+      title = fromJSON.title;
+      meta = fromJSON.meta;
+      content = fromJSON.content;
+      refreshView();
     }
   }, myJson);
 }
@@ -136,7 +162,7 @@ function syncNotes() {
     if (res.readyState === 4 && res.status === 200) {
       var response = JSON.parse( res.responseText );
       if (response.response !== "success") {
-        console.log('sync push error');
+        console.log("sync push error");
       }
     }
   }, myJson);
@@ -154,6 +180,7 @@ function syncNotes() {
   request("POST", "json", "/n.json", function(res) {
     if (res.readyState === 4 && res.status === 200) {
       var notesFromJSON = JSON.parse( res.responseText );
+      console.log(notesFromJSON.length)
       if (window.notes === undefined) {
         window.notes = [];
       }
@@ -210,27 +237,6 @@ function createNewNote() {
   }, myJson);
 
   syncNotes();
-}
-
-function metaToString(req) {
-  var res = "";
-  for (var i = 0; i < req.length; i++) {
-    res = res+req[i] + ", ";
-  }
-  return res;
-}
-
-function refreshView() {
-  if (window.title !== undefined) {
-    document.getElementById("note-title").innerHTML = title;
-  }
-  if (window.meta !== undefined) {
-    document.getElementById("note-meta").innerHTML = metaToString(meta);
-  }
-  if (window.content !== undefined) {
-    document.getElementById("note-content").innerHTML = content;
-  }
-  console.log("view updated");
 }
 
 function loadNote(newId) {
