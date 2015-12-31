@@ -29,15 +29,16 @@ function request(request, type, url, action, send) {
   xmlhttp.send(send);
 }
 
+function metaToTags(meta) {
+  var tags = meta.tags;
+  return tags.join(", ");
+}
+
 function metaToString(req) {
-  var tags = req.tags;
   var created_str = req["created"];
   var updated_str = req["updated"];
   var due_date_str = req["due_date"];
-  var res = "";
-  for (var i = 0; i < tags.length; i++) {
-    res = res+tags[i] + ", ";
-  }
+  var res = metaToTags(req);
   return res;
 }
 
@@ -117,7 +118,7 @@ function updateListView() {
   for (var i = 0; i < notes.length; i++) {
     var note1 = notes[i];
     str_ = buildNotePreviewToHtml( // jshint ignore:line
-      note1._id, note1.title, note1.meta, note1.content
+      note1._id, note1.title, metaToTags(note1.meta), note1.content
     );
     accum = accum + str_;
   }
