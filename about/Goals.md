@@ -19,6 +19,7 @@ Major version is first release of nice interface (1.0.0) which will freeze all A
 
 ### 0.2.0 - Clone back end, "front end"
 - match functionality of exposed Evernote API
+- Implement Users, login, associating notes with users
 - web interface that does basic note creation
 
 ### 0.3.0- Hidden HTML 1, versions and sharing
@@ -52,6 +53,7 @@ Major version is first release of nice interface (1.0.0) which will freeze all A
 
 ### 1.2.0 - Performance, interactivity, usability speed up, offline functionality
 - create a notes cache in the browser that stores all known note information up to 1000 latest notes and use notes from there to populate display. Update the list (FIFO queue) every time the note is updated or interacted with
+- push update of note content
 - when searching for notes, send out a request for the notes that match, but filter existing notes in the browser while waiting for a response and append the response later, then sort it in
 
 ### 1.3.0 - Web connectivity
