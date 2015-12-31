@@ -175,6 +175,7 @@ function syncNotes() {
     "page": 0,
     "count": 100
   };
+
   var controlJson = JSON.stringify(control);
 
   request("POST", "json", "/n.json", function(res) {
