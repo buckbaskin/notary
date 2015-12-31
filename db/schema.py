@@ -1,16 +1,18 @@
 import pymongo
+import datetime
 
 from bson.objectid import ObjectId
 
 client = pymongo.MongoClient('localhost', 27017)
 db = client.notary_database
 
+
 class Schema(object):
     collection = 'default'
 
     @staticmethod
     def to_mongo():
-        return {'version' : 0}
+        return {'version': 0}
 
     @staticmethod
     def get_all():
@@ -38,8 +40,9 @@ class Schema(object):
     @staticmethod
     def remove_one(id_):
         collection = getattr(db, Schema.collection)
-        result = collection.delete_many({'_id' : id_})
+        result = collection.delete_many({'_id': id_})
         return result.deleted_count
+
 
 class Note(Schema):
     collection = 'notes'
@@ -50,12 +53,18 @@ class Note(Schema):
     }
 
     @staticmethod
-    def to_mongo(title, meta, content, version=0):
+    def to_mongo(title, meta, content, version=0,
+                 created=datetime.datetime.utcnow()):
         base = Schema.to_mongo()
         add_ = {
             'title': title,
-            'meta': meta,
-            'content': content
+            'meta': {
+                'tags': meta['tags'],
+                'created': created,
+                'updated': datetime.datetime.utcnow(),
+                'due_date': None
+            }
+            'content': content,
         }
         newm = dict(base, **add_)
         newm['version'] = version
@@ -71,26 +80,30 @@ class Note(Schema):
                 order = -1
             else:
                 order = 1
-            print('sort: '+str(sort)+' order:' +str(order))
+            print('sort: ' + str(sort) + ' order:' + str(order))
             cursor = collection.find().sort([(sort, order)])
         else:
             cursor = collection.find()
         return cursor
 
     @staticmethod
-    def update_one(id_, title, meta, content):
+    def update_one(id_, title, meta, content, due_date=None):
         collection = getattr(db, Note.collection)
-        #TODO(buckbaskin): use the unused result to check for errors in update
+        # TODO(buckbaskin): use the unused result to check for errors in update
         _ = collection.update_one({
-            '_id' : ObjectId(id_)
-        },
-        {
-            '$set': {
-                'title': title,
-                'meta' : meta,
-                'content': content
-            }
-        })
+            '_id': ObjectId(id_)
+            },
+            {
+                '$set': {
+                    'title': title,
+                    'meta': meta,
+                    'content': content,
+                    'meta.due_date': due_date
+                },
+                '$currentDate': {
+                    'meta.updated': True
+                }
+            })
         return id_
 
     @staticmethod

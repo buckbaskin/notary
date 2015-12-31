@@ -31,9 +31,6 @@ $ python run.py
 
 #TODO
 
-- add a date-created, date-last-updated field to the note specification
-  - include a human readable short version, ex. Mar 5, 2015
-  - include a human readable long version, ex. 2:15pm Mar 5, 2015
 - make a queue of changes to be sent to the server, while using the note selector list as a variable to maintain the current state
   - make an indicator when a note has unsaved changes waiting to go to the server instead of briefly indicating that the note was saved. or maybe both
 - update bootstrap colors to make it light blue on dark blue color scheme (for everything except the text?)
@@ -48,3 +45,4 @@ $ python run.py
 - use flask-sessions/cookies to track which users are making which requests/accesses
   - modify the analysis script to sort accesses by user ID
 - implement users (in Mongo for now). Users have a username, password, email?, created date, last login date, unique user id
+- process date into a human readable short version, ex. Mar 5, 2015, human readable long version, ex. 2:15pm Mar 5, 2015 in Javascript
