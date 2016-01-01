@@ -28,21 +28,25 @@ Major version is first release of nice interface (1.0.0) which will freeze all A
 - save point versioning of notes. Start and end of every user editing session (no edits for >5 min or user clicks save?
 - note sharing link generator. Creates as public, read only copy of the note at a given point, with option to link to latest version of the note
 
-### 0.4.0 - Organization
+### 0.4.0 - Organization Client Side
 - organize notes by notebooks
 - a page/tab for managing tags (items in meta data list)
 - a page/tab for managing notebooks
 - filter notes by notebook
 - filter notes by tag
 
-### 0.5.0
+### 0.5.0 - Lists and Files
 - HTML lists, numbered lists from markdown type-out syntax
 - Attach files. Included as box with click to download functionality in the note. Somehow serve from website. At this point, note content is backed up by user-hidden HTML generated during saving. Display images in a standard max height, width preserving aspect ratio
 - Support file linking to google drive, other web services with a visually similar interface to the attaching files view. At this point, note content is backed up by user-hidden HTML generated during saving
 
-### 0.6.0
+### 0.6.0 - Full Text Search
 - hook into Evernote API
 - text search of notes
+
+### 0.7.0 - Testing
+- develop unittests for each of the modules that are actively used
+- create a dev, test, staging and production db instance and server to test/run against.
 
 ### 1.0.0 - UI, Undo, Interactive Versioning
 - a nice looking interface
