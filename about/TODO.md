@@ -9,6 +9,7 @@ Server Side
 - Add in new API functionality methods
 
 Client Side
+- FIX: make the client load the first note instead of the default note when the notes page loads.
 - make a queue of changes to be sent to the server, while using the note selector list as a variable to maintain the current state
   - make an indicator when a note has unsaved changes waiting to go to the server instead of briefly indicating that the note was saved. or maybe both
 - update bootstrap colors to make it light blue on dark blue color scheme (for everything except the text?)
