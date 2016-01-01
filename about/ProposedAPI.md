@@ -3,6 +3,10 @@
 ## Authentication Token
 A string that is generated from a login, which is then valid for a few minutes and can be sent back to authenticate the application
 
+## Error message
+
+Dict with ids as keys and either success or an error code as a the value. For the dict, there is also a status key, which is either success or an error if every ID failed with the same error. An undefined ID that was included in the request is assumed to match the status in value, but the dict should include all of the keys as an ack if possible
+
 ## Notes
 
 ### create notes (`authentication token, list of <note info>`)
@@ -111,33 +115,56 @@ Returns `{ 'results' : number of successful notebooks trashed }`
 
 ## Tags
 
-### create tag(atoken, tag info)
+### create tags (`atoken, list of <tag info>`)
 Create a new tag
 - name
-- parent id
+- parent id (can be empty)
+Tags are unique by name
+Returns `{ 'results': <number of successful creations> }`
 
-### trash tag (atoken, note id)
+### get tags (`atoken, list of <tag info>`)
+Returns a list of tags, given their ID as info 
+
+### trash tag (`atoken, tag id`)
 Send the given tag to the trash
+
+### update tag (`atoken, tag name, new name`)
+
+Change the given tag to a new name
+
+Returns `{ 'results' : number of successful updates }`
+
 
 ## Searches
 
-### create saved search(atoken, search info)
+### create saved search (`atoken, search info`)
 Create a new saved search with a given name and query
 - name
 - query
 Returns the search id
 
-### trash search (atoken, note id)
+### update saved search (`atoken, list of <search info>`)
+Insert the given info to update old searches. Info contains:
+- name
+- query
+
+### trash search (`atoken, note id`)
 Send the given search to the trash
 
 ## Trash
 Trash is a special "notebook" that has all trashed notes, notebooks, tags, searches. These can all be restored or permanently deleted.
 
-### delete note(atoken, note id)
+### delete note (`atoken, note id`)
 If the note is in the trash, delete it
 
-### delete notebook (atoken, note id)
+### delete notebook (`atoken, notebook id`)
 Delete the given notebook
 
-### delete trash(atoken)
-Delete all notes in the trash notebook
+### delete tag (`atoken, tag id`)
+Delete the given tag
+
+### delete search (`atoken, search id`)
+Delete the given search
+
+### delete trash (`atoken`)
+Delete all items in the trash
