@@ -20,6 +20,7 @@ Major version is first release of nice interface (1.0.0) which will freeze all A
 ### 0.2.0 - Clone back end, "front end"
 - match functionality of exposed Evernote API
 - Implement Users, login, associating notes with users
+- Implement Notebooks, Tags and Saved Searches
 - web interface that does basic note creation
 
 ### 0.3.0- Hidden HTML 1, versions and sharing
