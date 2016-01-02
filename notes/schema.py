@@ -2,7 +2,7 @@ import sys
 if not '/home/buck/Github/notary' in sys.path:
     sys.path.append('/home/buck/Github/notary')
 
-from db import Schema
+from db import Schema, database
 import datetime
 
 class Note(Schema):
@@ -34,7 +34,7 @@ class Note(Schema):
 
     @staticmethod
     def get_all(sort=None):
-        collection = getattr(db, Note.collection)
+        collection = getattr(database, Note.collection)
         if sort in Note.valid_sorts:
             if sort[:1] == '-':
                 sort = sort[1:]
@@ -49,7 +49,7 @@ class Note(Schema):
 
     @staticmethod
     def update_one(id_, title, meta, content):
-        collection = getattr(db, Note.collection)
+        collection = getattr(database, Note.collection)
         # TODO(buckbaskin): use the unused result to check for errors in update
 
         # use this to update old style metadata to new form factor
@@ -87,13 +87,13 @@ class Note(Schema):
     @staticmethod
     def get_one(id_):
         id_ = ObjectId(id_)
-        collection = getattr(db, Note.collection)
+        collection = getattr(database, Note.collection)
         data = collection.find_one({'_id': ObjectId(id_)})
         return data
 
     @staticmethod
     def create_one():
-        collection = getattr(db, Note.collection)
+        collection = getattr(database, Note.collection)
         result = collection.insert_one(
             Note.to_mongo('New Note', '|', 'begin typing here', 0)
             )
