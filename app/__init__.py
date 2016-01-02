@@ -12,4 +12,5 @@ from app.config import server_config
 server = Flask(__name__)
 server.config.from_object(server_config)
 
+from db import *
 from app import routes
