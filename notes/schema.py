@@ -1,4 +1,3 @@
-print('notes/schema.py')
 import sys
 if not '/home/buck/Github/notary' in sys.path:
     sys.path.append('/home/buck/Github/notary')
@@ -100,5 +99,3 @@ class Note(Schema):
             )
         id_ = result.inserted_id
         return id_
-
-print('end of notes/schema.py')

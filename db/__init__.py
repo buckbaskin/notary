@@ -1,15 +1,11 @@
-print('db/__init__.py')
+# print('db/__init__.py')
 from db.schema import Schema
 
 import pymongo
 client = pymongo.MongoClient('localhost', 27017)
 database = client.notary_database
 
-print('notes import in db')
-
 from notes import Note
-
-print('users import in db')
 
 from users.schema import User
 
