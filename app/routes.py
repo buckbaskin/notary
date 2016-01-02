@@ -10,12 +10,16 @@ import dateutil.parser as dateparser
 import analytics
 from db import Note
 
+##### Index #####
+
 @analytics.trace
 @server.route('/', methods=['GET'])
 def index():
     vm = {}
     vm['title'] = ''
     return render_template('index.html', vm=vm)
+
+##### Notes #####
 
 @analytics.trace
 @server.route('/notes', methods=['GET'])
@@ -63,7 +67,7 @@ def operate_notes():
             print('request did not match API')
             return ''
 
-#####
+###
 
 @analytics.trace
 def create_note():
@@ -156,7 +160,24 @@ def clean_note_for_json(note):
                 note['meta']['due_date'] = note['meta']['due_date'].isoformat()
     return note
 
-#####
+###
+
+##### Users #####
+
+@analytics.trace
+@server.route('/profile', methods=['GET'])
+def get_profile_html():
+    vm = {}
+    vm['title'] = 'Your Profile'
+    return render_template('user.html', vm=vm)
+
+@analytics.trace
+@server.route('/u.json', methods=['POST'])
+def operate_notes():
+    content = request.get_json()
+    return ''
+
+##### Error Handling #####
 
 @analytics.trace
 @server.errorhandler(404)
