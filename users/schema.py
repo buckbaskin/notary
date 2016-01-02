@@ -1,10 +1,10 @@
 from db import Schema, database
 from werkzeug.security import generate_password_hash, check_password_hash
 
-database.user.create_index({'username': 1}, {'unique': True})
+database.user.create_index('username')
 
 class User(Schema):
-	collection = 'user'
+    collection = 'user'
     valid_sorts = {
         'username': 1,
         'created': 1,
@@ -25,10 +25,10 @@ class User(Schema):
         del newm['version']
 
         if password is not None:
-        	# on create
-        	# TODO(buckbaskin): do something other than plain text
-        	# validate then hash the password
-        	newm['password_hash'] = generate_password_hash(password)
+            # on create
+            # TODO(buckbaskin): do something other than plain text
+            # validate then hash the password
+            newm['password_hash'] = generate_password_hash(password)
 
         return newm
 
@@ -88,11 +88,11 @@ class User(Schema):
 
     @staticmethod
     def get_by_username(username):
-    	collection = getattr(database, User.collection)
-    	cursor = collection.find({'username': username})
-    	for user in collection:
-    		return user
-    	return None
+        collection = getattr(database, User.collection)
+        cursor = collection.find({'username': username})
+        for user in collection:
+            return user
+        return None
 
     @staticmethod
     def check_password(username, password):

@@ -9,7 +9,7 @@ import dateutil.parser as dateparser
 
 import analytics
 
-from users import check_auth, AuthError
+from users.authenticate import check_auth, AuthError
 from users import routes
 
 from notes import routes

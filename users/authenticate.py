@@ -1,7 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from db import User
 
-
 def check_auth(request, content):
 	if 'action' not in content or not content['action'] == 'login':
 		raise AuthError()
