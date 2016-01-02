@@ -34,16 +34,6 @@ def notes_html():
     return render_template('notes.html', vm=vm)
 
 @analytics.trace
-@server.route('/n.json', methods=['GET'])
-def get_all_notes():
-    cursor = Note.get_all()
-    notes = []
-
-    for note in cursor:
-        notes.append(clean_note_for_json(note))
-    return json.dumps(notes)
-
-@analytics.trace
 @server.route('/n.json', methods=['POST'])
 def operate_notes():
     content = request.get_json()
