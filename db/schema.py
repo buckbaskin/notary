@@ -1,5 +1,4 @@
 import pymongo
-import datetime
 
 from bson.objectid import ObjectId
 
@@ -12,7 +11,7 @@ if not '/home/buck/Github/notary' in sys.path:
 
 class Schema(object):
     collection = 'default'
-    
+
     @staticmethod
     def to_mongo():
         return {'version': 0}
@@ -91,7 +90,7 @@ class Schema(object):
 #     @staticmethod
 #     def update_one(id_, title, meta, content):
 #         collection = getattr(db, Note.collection)
-#         # TODO(buckbaskin): use the unused result to check for errors in update
+#         # TODO(buckbaskin): use the unused result to check for errors
 
 #         # use this to update old style metadata to new form factor
 #         if isinstance(meta, (list, )):

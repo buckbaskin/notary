@@ -9,7 +9,7 @@ from notes import Note
 
 from users.schema import User
 
-# WIP | Future TODO: programatically import all schemas in the top level directory
+# Future TODO: programatically import all schemas in the top level directory
 
 # import os
 # import importlib
