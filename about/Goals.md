@@ -45,7 +45,7 @@ Major version is first release of nice interface (1.0.0) which will freeze all A
 - text search of notes
 
 ### 0.7.0 - Testing
-- develop unittests for each of the modules that are actively used
+- develop unittests for each of the modules that are used
 - create a dev, test, staging and production db instance and server to test/run against.
 
 ### 1.0.0 - UI, Undo, Interactive Versioning
