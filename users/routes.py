@@ -6,7 +6,6 @@ import json
 import dateutil.parser as dateparser
 
 import analytics
-from db import Note
 
 ##### Users #####
 
