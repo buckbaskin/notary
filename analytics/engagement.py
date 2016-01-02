@@ -3,7 +3,9 @@ import pymongo
 
 client = pymongo.MongoClient('localhost', 27017)
 
-def save_call(fname, params=(), args=(), vargs={}, ret_val=None):
+def save_call(fname, params=(), args=(), vargs=None, ret_val=None):
+    if vargs is None:
+        vargs = {}
 
     db = client.notary_database
     collection = db.access
@@ -14,7 +16,7 @@ def save_call(fname, params=(), args=(), vargs={}, ret_val=None):
 
     # print('lp: '+str(len(params)))
 
-    for i in range(0,len(params)):
+    for i in range(0, len(params)):
         param = params[i]
         if len(arg_queue) > 0:
             if i == (len(params)-1):
@@ -39,7 +41,9 @@ def save_call(fname, params=(), args=(), vargs={}, ret_val=None):
     inserted_record = collection.insert_one(record)
     return inserted_record.inserted_id
 
-def save_err_call(fname, params=(), args=(), vargs={}, error=None):
+def save_err_call(fname, params=(), args=(), vargs=None, error=None):
+    if vargs is None:
+        vargs = {}
 
     db = client.notary_database
     collection = db.access
@@ -50,7 +54,7 @@ def save_err_call(fname, params=(), args=(), vargs={}, error=None):
 
     # print('lp: '+str(len(params)))
 
-    for i in range(0,len(params)):
+    for i in range(0, len(params)):
         param = params[i]
         if len(arg_queue) > 0:
             if i == (len(params)-1):
@@ -87,7 +91,8 @@ def trace(function):
             val = function(*args, **vargs)
         except Exception as e:
             try:
-                save_err_call(fname=call_name, params=call_params, args=call_args, vargs=call_vargs, error=e)
+                save_err_call(fname=call_name, params=call_params,
+                    args=call_args, vargs=call_vargs, error=e)
             except pymongo.errors.PyMongoError as pme:
                 # TODO(buckbaskin): for now, don't do anything on a Mongo error
                 pass
@@ -95,13 +100,15 @@ def trace(function):
                 raise e
         finally:
             try:
-                save_call(fname=call_name, params=call_params, args=call_args, vargs=call_vargs, ret_val=val)
+                save_call(fname=call_name, params=call_params, args=call_args,
+                    vargs=call_vargs, ret_val=val)
                 return val
             except pymongo.errors.PyMongoError as pme:
                 # TODO(buckbaskin): for now, don't do anything on a Mongo error
                 pass
             except NameError:
-                # TODO(buckbaskin): if val is undefined, don't do anything for now (probably an exception above)
-                pass
+                # TODO(buckbaskin): if val is undefined, don't do anything for
+                #  now (probably an exception above)
+                return
         
     return wrapped_function
