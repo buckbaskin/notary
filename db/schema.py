@@ -12,8 +12,7 @@ if not '/home/buck/Github/notary' in sys.path:
 
 class Schema(object):
     collection = 'default'
-    db = client.notary_database
-
+    
     @staticmethod
     def to_mongo():
         return {'version': 0}

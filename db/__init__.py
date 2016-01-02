@@ -5,7 +5,7 @@ client = pymongo.MongoClient('localhost', 27017)
 database = client.notary_database
 
 from notes.schema import Note
-# from users.schema import User
+from users.schema import User
 
 # WIP | Future TODO: programatically import all schemas in the top level directory
 
