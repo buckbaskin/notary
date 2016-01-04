@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+	<style>
+	.my-btn {
+		width: 100%;
+	}
+	.my-half {
+		padding-top: 50%;
+	}
+	</style>
+	<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+	<div class="row">
+		<div class="col-md-offset-3 col-md-6">
+			<div class="row my-half">
+				<div id="message" class="col-md-12"></div>
+				<div class="col-md-6">
+				<input type="text" class="form-control" id="username" name="username" placeholder="username">
+				<input type="button" class="btn btn-default my-btn" value="Login" onclick="sendLogin();">
+				</div>
+				<div class="col-md-6">
+				<input type="password" class="form-control" id="password" placeholder="password">
+				<div id="confirm-holder">
+					<input type="password" class="form-control" id="confirm-password" placeholder="confirm password">
+				</div>
+				<input type="button" class="btn btn-default my-btn" value="Create User" onclick="createUser();">
+				</div>
+			</div>
+		</div>
+	</div>
+	<style onload="hideConfirm();">
+	</style>
+{% endblock %}
