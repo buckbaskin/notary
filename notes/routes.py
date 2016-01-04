@@ -32,7 +32,7 @@ def operate_notes():
     content = request.get_json()
     try:
         # raises a Validation error if the request isn't authorized
-        check_auth(request, content)
+        check_auth(content)
     except AuthError:
         return ''
 
@@ -42,7 +42,7 @@ def operate_notes():
     else:
         if content['action'] == 'create':
             print('create action')
-            return create_note()
+            return create_notes(content)
         elif len(content['action']) >= 4 and content['action'][:4] == 'read':
             print('select_read action')
             return select_read(content)
@@ -60,15 +60,14 @@ def operate_notes():
 @analytics.trace
 def create_notes(content):
     note_objects = content['notes']
-    new_ids = []
-    for note in note_objects:
-        new_ids.append(Note.create_from_object(note))
+    username = content['atoken'][0]
+    new_ids = [Note.create_from_object(obj, username) for obj in note_objects]
     return map(get_note, new_ids)
 
-@analytics.trace
-def create_note():
-    new_id = Note.create_one()
-    return get_note(new_id)
+# @analytics.trace
+# def create_note():
+#     new_id = Note.create_one()
+#     return get_note(new_id)
 
 @analytics.trace
 def select_read(content):

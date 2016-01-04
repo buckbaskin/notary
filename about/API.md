@@ -10,14 +10,15 @@ Home page
 
 Returns the HTML page for the notes single-page web app
 
-### ```/n.json``` GET
+### ```/n.json``` GET - Deprecated, won't be valid in v1
 
 Returns a json object with all of the notes. In future versions, this may become paginated, or deprecated in favor of using the POST endpoint.
 
 ### ```/n.json``` POST
 
 Based on the content of the JSON posted, this can perform a variety of operations, including:
-- Create: ex. ```{'action': 'create'}```. Returns the new note id.
+- Create: ex. ```{'atoken': [username, token] , 'action': 'create', 'notes': [list of partial note objects] }```. If the atoken pair matches, create a note for each note object based on the information passed in for the user. If there is missing information in the given object, the default value will be filled in instead.
+
 - Read: ```{'action': 'read', ... } guesses read type based on data. Order of precedence
   - Read One: ex. ```{'action': 'readone', '_id': '57a...'}```
   - Read Many: ex. ```{'action': 'readmany', 'sort_by': 'date', 'page':0, 'count': 100 }```

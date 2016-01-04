@@ -7,7 +7,7 @@ database = client.notary_database
 
 from notes import Note
 
-from users.schema import User
+from users.schema import User, LoginToken
 
 # Future TODO: programatically import all schemas in the top level directory
 
