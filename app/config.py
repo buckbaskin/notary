@@ -1,4 +1,4 @@
 class ServerConfig(object):
-	pass
+    pass
 
 server_config = ServerConfig()

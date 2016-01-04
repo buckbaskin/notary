@@ -2,16 +2,10 @@
 
 from app import server
 from flask import render_template
-from flask import request
-
-import json
-import dateutil.parser as dateparser
 
 import analytics
 
-from users.authenticate import check_auth, AuthError
 from users import routes
-
 from notes import routes
 
 ##### Index #####

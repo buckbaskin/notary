@@ -15,4 +15,4 @@ def doathing(a, b, c, *args):
     return 10
 
 if __name__ == '__main__':
-    doathing(1,2,3,4,5,6)
+    doathing(1, 2, 3, 4, 5, 6)
