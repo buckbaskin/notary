@@ -4,6 +4,7 @@ if not '/home/buck/Github/notary' in sys.path:
 
 from db import Schema, database
 import datetime
+from bson.objectid import ObjectId
 
 class Note(Schema):
     collection = 'notes'

@@ -1,3 +1,4 @@
+# pylint: disable=superfluous-parens
 from app import server
 from flask import render_template
 from flask import request
@@ -8,6 +9,8 @@ import dateutil.parser as dateparser
 import analytics
 
 from db import Note
+
+from users.authenticate import check_auth, AuthError
 
 ##### Notes #####
 
@@ -130,7 +133,6 @@ def clean_note_from_json(note):
     return note
 
 def clean_note_for_json(note):
-    print('clean_note_for_json')
     note['_id'] = str(note['_id'])
     if isinstance(note['meta'], (dict,)):
         if 'updated' in note['meta']:
