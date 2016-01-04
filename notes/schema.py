@@ -93,6 +93,25 @@ class Note(Schema):
         return data
 
     @staticmethod
+    def create_from_object(note_obj):
+        collection = getattr(database, Note.collection)
+        if 'title' not in note_obj:
+            note_obj['title'] = 'New Note'
+        if 'meta' not in note_obj:
+            meta = {}
+            meta['tags'] = []
+        if 'content' not in note_obj:
+            content = 'Take notes here'
+        note_obj['version'] = 0
+        note_obj['created'] = datetime.datetime.utcnow()
+        result = collection.insert_one(
+            Note.to_mongo(note_obj['title'], note_obj['meta'],
+                note_obj['content'], note_obj['version'], note_obj['created'])
+        )
+        id_ = result.inserted_id
+        return id_
+
+    @staticmethod
     def create_one():
         collection = getattr(database, Note.collection)
         result = collection.insert_one(

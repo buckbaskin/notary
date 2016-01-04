@@ -57,6 +57,13 @@ def operate_notes():
             return ''
 
 ###
+@analytics.trace
+def create_notes(content):
+    note_objects = content['notes']
+    new_ids = []
+    for note in note_objects:
+        new_ids.append(Note.create_from_object(note))
+    return map(get_note, new_ids)
 
 @analytics.trace
 def create_note():
