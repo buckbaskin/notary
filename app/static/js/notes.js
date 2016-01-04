@@ -13,6 +13,8 @@ var content = "";
 if (window.id_ === undefined) {
   var id_ = "567dff3599b4971e04354410";
 }
+var token = "";
+var username = "";
 
 function request(request, type, url, action, send) {
   var xmlhttp = new XMLHttpRequest();
@@ -224,12 +226,23 @@ function saveAllEdits() {
 function createNewNote() {
   syncNotes();
   
-  var data = { "action": "create" };
+  var data = { 
+    "atoken": [
+      username,
+      token,
+    ],
+    "action": "create",
+    "notes": [
+      {
+        "username": username,
+      }
+    ]
+  };
   var myJson = JSON.stringify(data);
   
   request("POST", "json", "/n.json", function(res) {
     if (res.readyState === 4 && res.status === 200) {
-      var fromJSON = JSON.parse( res.responseText );
+      var fromJSON = JSON.parse( res.responseText )[0];
       id_ = fromJSON._id;
       document.getElementById("note-title").innerHTML = fromJSON.title;
       document.getElementById("note-meta").innerHTML = fromJSON.meta;
