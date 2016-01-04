@@ -1,5 +1,7 @@
 from db import Schema, database
 from werkzeug.security import generate_password_hash, check_password_hash
+from bson.objectid import ObjectId
+import random
 
 database.user.create_index('username')
 
@@ -119,3 +121,32 @@ class User(Schema):
         )
         id_ = result.inserted_id
         return id_
+
+class LoginToken(Schema):
+    collection = 'logintoken'
+
+    @staticmethod
+    def to_mongo(username, token, created):
+        return {
+            'username': username,
+            'token': token,
+            'created': created
+        }
+
+    @staticmethod
+    def create_one(username):
+        collection = getattr(database, LoginToken.collection)
+        token = ''.join(random.choice('abcdefghijklmnopqrstuvwxyz0123456789') for i in range(64))
+        result = collection.insert_one(
+            LoginToken.to_mongo(username, token, datetime.datetime.utcnow())
+        )
+        return token
+
+    @staticmethod
+    def check_token(username, token):
+        collection = getattr(database, LoginToken.collection)
+        cursor = collection.find({'username': username, 'token': token})
+        for token in cursor:
+            if (datetime.datetime.utcnow() - token['created']).total_seconds() < 300:
+                return True
+        return False
