@@ -78,6 +78,8 @@ def select_read(content):
     elif content['action'] == 'readmany':
         print('get_notes action 2')
         return get_notes(content)
+    else:
+        return ''
 
 @analytics.trace
 def get_note(note_id):
