@@ -2,6 +2,7 @@ from db import Schema, database
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
 import random
+import datetime
 
 database.user.create_index('username')
 
@@ -92,13 +93,13 @@ class User(Schema):
     def get_by_username(username):
         collection = getattr(database, User.collection)
         cursor = collection.find({'username': username})
-        for user in collection:
+        for user in cursor:
             return user
         return None
 
     @staticmethod
     def check_password(username, password):
-        user = get_by_username(username)
+        user = User.get_by_username(username)
         if user is not None:
             return check_password_hash(user['password_hash'], password)
         return False
@@ -113,11 +114,13 @@ class User(Schema):
     @staticmethod
     def create_one(username, password):
         # check to see if the username is unique
-        if get_by_username(username) is None:
+        if User.get_by_username(username) is None:
             return None
         collection = getattr(database, User.collection)
         result = collection.insert_one(
-            User.to_mongo(username, password, created=datetime.datetime.utcnow(), logged_in=datetime.datetime.utcnow())
+            User.to_mongo(username, password,
+                created=datetime.datetime.utcnow(),
+                logged_in=datetime.datetime.utcnow())
         )
         id_ = result.inserted_id
         return id_
@@ -136,8 +139,11 @@ class LoginToken(Schema):
     @staticmethod
     def create_one(username):
         collection = getattr(database, LoginToken.collection)
-        token = ''.join(random.choice('abcdefghijklmnopqrstuvwxyz0123456789') for i in range(64))
-        result = collection.insert_one(
+        token = ''.join(
+            random.choice('abcdefghijklmnopqrstuvwxyz0123456789')
+            for i in range(64)
+        )
+        _ = collection.insert_one(
             LoginToken.to_mongo(username, token, datetime.datetime.utcnow())
         )
         return token
@@ -147,6 +153,7 @@ class LoginToken(Schema):
         collection = getattr(database, LoginToken.collection)
         cursor = collection.find({'username': username, 'token': token})
         for token in cursor:
-            if (datetime.datetime.utcnow() - token['created']).total_seconds() < 300:
+            time_delta = datetime.datetime.utcnow() - token['created']
+            if time_delta.total_seconds() < 300:
                 return True
         return False

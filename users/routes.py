@@ -2,13 +2,10 @@ from app import server
 from flask import render_template
 from flask import request
 
-import json
-import dateutil.parser as dateparser
-
 import analytics
 
 from users.authenticate import check_auth, AuthError
-from db import Note
+from db import User
 
 ##### Users #####
 
