@@ -1,6 +1,6 @@
 var authToken = "";
 var hideConfirmBool = true;
-const hideConfirmText = "<input type=\"password\" class=\"form-control\" id=\"confirm-password\" placeholder=\"confirm password\">";
+const hideConfirmText = "<input type=\"password\" class=\"form-control\" id=\"confirm-password\" placeholder=\"confirm password\" onblur=\"checkConfirmMatch();\">";
 
 function sendLogin() {
   var username = document.getElementById("username").value;
@@ -53,6 +53,12 @@ function showConfirm() {
   if (username.length > 0 && password.length > 0) {
     document.getElementById("message").innerHTML = "Confirm your password to create a new account";
   }
+}
+
+function checkConfirmMatch() {
+  // TODO(buckbaskin)
+  console.log("checkConfirmMatch");
+  return true;
 }
 
 function createUser() {
