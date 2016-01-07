@@ -1,89 +1,89 @@
 {% extends "base.html" %}
 {% block content %}
-	<style>
-		div.note-preview {
-			height: 96px;
-			padding: 10px;
-			border-top: 1px solid black;
-			border-bottom: 1px solid black;
-			word-wrap: normal;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-		.intro-line h4,
-		.intro-line p {
-			display: inline;
-			vertical-align: top;
-			padding-left: 5px;
-		}
-		div.note-selector {
-			border-right: 1px solid black;
-			height: 100%;
-		}
-		.scrolling {
-			overflow-y: auto;
-			overflow-x: hidden;
-			margin-right: -10px;
-		}
-	</style>
-	<script src="{{ url_for('static', filename='js/notes.js') }}"></script>
-	<div class="row">
-		<div class="col-md-3 note-selector">
-			<!-- note selector -->
-			<p>Note Selector</p>
-			<input type="button" value="New Note" onclick="createNewNote();" ></input>
-			<input type="button" value="Sync" onclick="syncNotes();" ></input>
-			<p>Sort by:&nbsp;
-				<input type="button" value="Title" onclick="sortNotesByAttr('title');">
-				<input type="button" value="Meta" onclick="sortNotesByAttr('meta');">
-				<input type="button" value="Content" onclick="sortNotesByAttr('content');">
-			</p>
-			<div id="notes-list" class="scrolling">
-				<!-- example note -->
-				<!-- <div class="row note-preview">
-					<div class="intro-line">
-						<h4>Note1</h4>
-						<p> - |preview text with a lot of words behind it. abcdefg hi jklmnopoqnaosdfj no qwerty qwerty qwery qwerty qwerty qwerty qwerty qwerty qwerty|</p>
-					</div>
-				</div> -->
-				<!-- end example note -->
-				{% if vm['notes'] %}
-				{% for note in vm['notes'] %}
-				<div id="{{ note['_id'] }}" class="row note-preview" onclick="loadNote( '{{ note['_id'] }}' );">
-					<div class="intro-line">
-						<h4>{{ note['title'] }}</h4>
-						<p> - |{{ note['meta'] }}|{{ note['content'] }}|</p>
-					</div>
-				</div>
-				{% endfor %}
-				{% endif %}
-			</div>
-		</div>
-		<div class="col-md-9 note-editor">
-			<script>
-				var title = "";
-				var meta = [];
-				var content = "";
-				{% if vm['notes'] and vm['notes']|length > 0 %}
-			    var id_ = "{{ vm.notes[0]._id }}";
-				// Don't do this. It would require writing out everything as json or something...Load this on first sync, note load, etc
-			    // var notes = {{ vm['notes'] }};
-			    loadNote(id_);
-			    {% else %}
-			    var id_ = '567dff3599b4971e04354410';
-			    {% endif %}
+    <style>
+        div.note-preview {
+            height: 96px;
+            padding: 10px;
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+            word-wrap: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .intro-line h4,
+        .intro-line p {
+            display: inline;
+            vertical-align: top;
+            padding-left: 5px;
+        }
+        div.note-selector {
+            border-right: 1px solid black;
+            height: 100%;
+        }
+        .scrolling {
+            overflow-y: auto;
+            overflow-x: hidden;
+            margin-right: -10px;
+        }
+    </style>
+    <script src="{{ url_for('static', filename='js/notes.js') }}"></script>
+    <div class="row">
+        <div class="col-md-3 note-selector">
+            <!-- note selector -->
+            <p>Note Selector</p>
+            <input type="button" value="New Note" onclick="$cope.createNewNote();" ></input>
+            <input type="button" value="Sync" onclick="$cope.syncNotes();" ></input>
+            <p>Sort by:&nbsp;
+                <input type="button" value="Title" onclick="$cope.sortNotesByAttr('title');">
+                <input type="button" value="Meta" onclick="$cope.sortNotesByAttr('meta');">
+                <input type="button" value="Content" onclick="$cope.sortNotesByAttr('content');">
+            </p>
+            <div id="notes-list" class="scrolling">
+                <!-- example note -->
+                <!-- <div class="row note-preview">
+                    <div class="intro-line">
+                        <h4>Note1</h4>
+                        <p> - |preview text with a lot of words behind it. abcdefg hi jklmnopoqnaosdfj no qwerty qwerty qwery qwerty qwerty qwerty qwerty qwerty qwerty|</p>
+                    </div>
+                </div> -->
+                <!-- end example note -->
+                {% if vm['notes'] %}
+                {% for note in vm['notes'] %}
+                <div id="{{ note['_id'] }}" class="row note-preview" onclick="$cope.loadNote( '{{ note['_id'] }}' );">
+                    <div class="intro-line">
+                        <h4>{{ note['title'] }}</h4>
+                        <p> - |{{ note['meta'] }}|{{ note['content'] }}|</p>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-9 note-editor">
+            <script>
+                var title = "";
+                var meta = [];
+                var content = "";
+                {% if vm['notes'] and vm['notes']|length > 0 %}
+                var id_ = "{{ vm.notes[0]._id }}";
+                // Don't do this. It would require writing out everything as json or something...Load this on first sync, note load, etc
+                // var notes = {{ vm['notes'] }};
+                $cope.loadNote(id_);
+                {% else %}
+                var id_ = '567dff3599b4971e04354410';
+                {% endif %}
 
-			</script>
-			<div style="border-bottom: 1px solid black;">
-				<h1>
-					<div id="note-title" class="editable" contenteditable="true" onblur="saveAllEdits()" style="display: inline;">Note Editor - New Note</div>
-					<div id="saved" style="display: inline;"></div>
-				</h1>
-			</div>
-			<div class="editable" contenteditable="true" onblur="saveAllEdits()" >
-				<h4 id="note-meta" style="border-bottom: 1px solid black; height: 20px; min-width: 20px;">Click here to add meta data</h4>
-			</div>
-			<p id="note-content" class="editable" contenteditable="true" onblur="saveAllEdits()"> Click here to begin taking notes</p>
-		</div>
-	</div>
+            </script>
+            <div style="border-bottom: 1px solid black;">
+                <h1>
+                    <div id="note-title" class="editable" contenteditable="true" onblur="$cope.saveAllEdits();" style="display: inline;">Note Editor - New Note</div>
+                    <div id="saved" style="display: inline;"></div>
+                </h1>
+            </div>
+            <div class="editable" contenteditable="true" onblur="$cope.saveAllEdits();" >
+                <h4 id="note-meta" style="border-bottom: 1px solid black; height: 20px; min-width: 20px;">Click here to add meta data</h4>
+            </div>
+            <p id="note-content" class="editable" contenteditable="true" onblur="$cope.saveAllEdits();"> Click here to begin taking notes</p>
+        </div>
+    </div>
 {% endblock %}
