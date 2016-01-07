@@ -1,6 +1,6 @@
 # pylint: disable=superfluous-parens
 from app import server
-from flask import render_template
+from flask import render_template, redirect, url_for
 from flask import request
 
 import json
@@ -34,7 +34,8 @@ def operate_notes():
         # raises a Validation error if the request isn't authorized
         check_auth(content)
     except AuthError:
-        return ''
+        print('Auth Error, empty response')
+        return json.dumps({'redirect': 'http://localhost:5000/login'})
 
     if 'action' not in content:
         print('action not in content')

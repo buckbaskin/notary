@@ -1,25 +1,25 @@
 "use strict";
-/* globals $cope: true */
+/* globals $scope: true */
 
 function __notes(oldScope) {
-  $cope = oldScope.clone(oldScope);
-  $cope.notes = [];
-  $cope.sortBy = "title";
-  $cope.title = "";
-  $cope.meta = {
+  $scope = oldScope.clone(oldScope);
+  $scope.notes = [];
+  $scope.sortBy = "title";
+  $scope.title = "";
+  $scope.meta = {
     "tags" : [],
     "created" : Date.now(),
     "updated" : Date.now(),
     "due_date" : undefined
   };
-  $cope.content = "";
-  if ($cope.id_ === undefined) {
-    $cope.id_ = "567dff3599b4971e04354410";
+  $scope.content = "";
+  if ($scope.id_ === undefined) {
+    $scope.id_ = "567dff3599b4971e04354410";
   }
-  $cope.token = "";
-  $cope.username = "";
+  $scope.token = "";
+  $scope.username = "";
 
-  $cope.request = function(request, type, url, action, send) {
+  $scope.request = function(request, type, url, action, send) {
     var xmlhttp = new XMLHttpRequest();
     
     xmlhttp.open(request, url, true);
@@ -34,33 +34,33 @@ function __notes(oldScope) {
     xmlhttp.send(send);
   };
 
-  $cope.metaToTags = function(meta) {
+  $scope.metaToTags = function(meta) {
     var tags = meta.tags;
     return tags.join(", ");
   };
 
-  $cope.metaToString = function(req) {
+  $scope.metaToString = function(req) {
     // var createdStr = req.created;
     // var updatedStr = req.updated;
     // var dueDateStr = req.due_date; // jshint ignore:line
-    var res = $cope.metaToTags(req);
+    var res = $scope.metaToTags(req);
     return res;
   };
 
-  $cope.refreshView = function() {
-    if ($cope.title !== undefined) {
-      document.getElementById("note-title").innerHTML = $cope.title;
+  $scope.refreshView = function() {
+    if ($scope.title !== undefined) {
+      document.getElementById("note-title").innerHTML = $scope.title;
     }
-    if ($cope.meta !== undefined) {
-      document.getElementById("note-meta").innerHTML = $cope.metaToString($cope.meta);
+    if ($scope.meta !== undefined) {
+      document.getElementById("note-meta").innerHTML = $scope.metaToString($scope.meta);
     }
-    if ($cope.content !== undefined) {
-      document.getElementById("note-content").innerHTML = $cope.content;
+    if ($scope.content !== undefined) {
+      document.getElementById("note-content").innerHTML = $scope.content;
     }
     console.log("view updated");
   };
 
-  $cope.postNoteJSON = function(id_, title, meta, content) {
+  $scope.postNoteJSON = function(id_, title, meta, content) {
     var myNote = {
       "title" : title,
       "meta" : meta,
@@ -72,27 +72,30 @@ function __notes(oldScope) {
     };
     var myJson = JSON.stringify(myData);
     
-    $cope.request("POST", "json", "/n.json", function(res) {
+    $scope.request("POST", "json", "/n.json", function(res) {
       console.log('callback');
       console.log(res);
       if (res.readyState === 4 && res.status === 200) {
         var fromJSON = JSON.parse( res.responseText );
-        $cope.id_ = fromJSON._id;
-        $cope.title = fromJSON.title;
-        $cope.meta = fromJSON.meta;
-        $cope.content = fromJSON.content;
-        $cope.refreshView();
+        if (fromJSON.redirect !== undefined) {
+          window.location = fromJSON.redirect;
+        }
+        $scope.id_ = fromJSON._id;
+        $scope.title = fromJSON.title;
+        $scope.meta = fromJSON.meta;
+        $scope.content = fromJSON.content;
+        $scope.refreshView();
       }
     }, myJson);
   };
 
-  $cope.updateListItem = function(id_, title, meta, content) {
-    for (var i = $cope.notes.length - 1; i >= 0; i--) {
-      if ($cope.notes[i]._id === id_) {
+  $scope.updateListItem = function(id_, title, meta, content) {
+    for (var i = $scope.notes.length - 1; i >= 0; i--) {
+      if ($scope.notes[i]._id === id_) {
 
-        $cope.notes[i].title = title;
-        $cope.notes[i].meta = meta;
-        $cope.notes[i].content = content;
+        $scope.notes[i].title = title;
+        $scope.notes[i].meta = meta;
+        $scope.notes[i].content = content;
         
         console.log("note data pushed into the local list");
         return;
@@ -100,14 +103,14 @@ function __notes(oldScope) {
     }
   };
 
-  $cope.displaySaved = function() {
+  $scope.displaySaved = function() {
     document.getElementById("saved").innerHTML = " - Saved";
     setTimeout(function() {
       document.getElementById("saved").innerHTML = "";
     }, 1000);
   };
 
-  $cope.buildNotePreviewToHtml = function(id_, title, meta, content) {
+  $scope.buildNotePreviewToHtml = function(id_, title, meta, content) {
     var str_ = `<div id="${id_}" class="row note-preview" onclick="loadNote( \'${id_}\' );">`;
     console.log(str_);
     str_ = str_ + '<div class="intro-line">';
@@ -121,16 +124,16 @@ function __notes(oldScope) {
     return str_;
   };
 
-  $cope.updateListView = function() {
+  $scope.updateListView = function() {
     console.log("updating note-selector view");
-    console.log($cope.notes);
+    console.log($scope.notes);
     var accum = "";
     var str_ = "";
-    for (var i = 0; i < $cope.notes.length; i++) {
-      var note1 = $cope.notes[i];
+    for (var i = 0; i < $scope.notes.length; i++) {
+      var note1 = $scope.notes[i];
       if (note1 !== undefined) {
-        str_ = $cope.buildNotePreviewToHtml( // jshint ignore:line
-          note1._id, note1.title, $cope.metaToTags(note1.meta), note1.content
+        str_ = $scope.buildNotePreviewToHtml( // jshint ignore:line
+          note1._id, note1.title, $scope.metaToTags(note1.meta), note1.content
           );
         accum = accum + str_;
       }
@@ -139,10 +142,10 @@ function __notes(oldScope) {
     document.getElementById("notes-list").innerHTML = accum;
   };
 
-  $cope.sortNotesByAttr = function(attr) {
-    $cope.sortBy = attr;
+  $scope.sortNotesByAttr = function(attr) {
+    $scope.sortBy = attr;
     if (attr === "title" || attr === "content") {
-      $cope.notes = $cope.notes.sort(function(a, b) {
+      $scope.notes = $scope.notes.sort(function(a, b) {
         if (a[attr] > b[attr]) {
           return 1;
         } else if (a[attr] === b[attr]) {
@@ -153,7 +156,7 @@ function __notes(oldScope) {
       });
     }
     if (attr === "meta") {
-      $cope.notes = $cope.notes.sort(function(a, b) {
+      $scope.notes = $scope.notes.sort(function(a, b) {
         if (a.meta[0] > b.meta[0]) {
           return 1;
         } else if (a.meta[0] === b.meta[0]) {
@@ -163,24 +166,25 @@ function __notes(oldScope) {
         }
       });
     }
-    $cope.updateListView();
+    $scope.updateListView();
   };
 
-  $cope.syncNotes = function() {
+  $scope.syncNotes = function() {
 
     var data = { 
       "action": "update", 
-      "notes": $cope.notes
+      "notes": $scope.notes
     };
     var myJson = JSON.stringify(data);
 
     console.log("sync push");
 
-    $cope.request("POST", "json", "/n.json", function(res) {
-      console.log('sync push request');
-      console.log(res);
+    $scope.request("POST", "json", "/n.json", function(res) {
       if (res.readyState === 4 && res.status === 200) {
         var response = JSON.parse( res.responseText );
+        if (response.redirect !== undefined) {
+          window.location = response.redirect;
+        }
         if (response.response !== "success") {
           console.log("sync push error");
         }
@@ -191,34 +195,34 @@ function __notes(oldScope) {
 
     var control = {
       "action": "readmany",
-      "sort_by": $cope.sortBy,
+      "sort_by": $scope.sortBy,
       "page": 0,
       "count": 100
     };
 
     var controlJson = JSON.stringify(control);
 
-    $cope.request("POST", "json", "/n.json", function(res) {
-      console.log('sync pull request');
-      console.log(res);
+    $scope.request("POST", "json", "/n.json", function(res) {
       if (res.readyState === 4 && res.status === 200) {
         var notesFromJSON = JSON.parse( res.responseText );
-        if ($cope.notes === undefined) {
-          $cope.notes = [];
+        if ($scope.notes === undefined) {
+          $scope.notes = [];
         }
-        console.log('notes? from json');
-        $cope.notes = notesFromJSON;
-        console.log(notesFromJSON);
-        if ($cope.sortBy !== undefined) {
-          $cope.sortNotesByAttr($cope.sortBy);
+        if (notesFromJSON instanceof Array) {
+          $scope.notes = notesFromJSON;
+        } else {
+          $scope.notes = [];
         }
-        $cope.updateListView();
+        if ($scope.sortBy !== undefined) {
+          $scope.sortNotesByAttr($scope.sortBy);
+        }
+        $scope.updateListView();
       }
     }, controlJson);
     console.log('end sync');
   };
 
-  $cope.stringToMeta = function(req) {
+  $scope.stringToMeta = function(req) {
     var res = req.split(", ");
     var meter = [];
     for (var i = 0; i < res.length; i++) {
@@ -226,41 +230,41 @@ function __notes(oldScope) {
         meter.push(res[i]);
       }
     }
-    $cope.meta.tags = meter;
-    return $cope.meta;
+    $scope.meta.tags = meter;
+    return $scope.meta;
   };
 
-  $cope.saveAllEdits = function() {
+  $scope.saveAllEdits = function() {
     var title = document.getElementById("note-title").innerHTML;
     var metaStr = document.getElementById("note-meta").innerHTML;
-    var meta = $cope.stringToMeta(metaStr);
+    var meta = $scope.stringToMeta(metaStr);
     var count = document.getElementById("note-content").innerHTML;
 
-    $cope.postNoteJSON($cope.id_, title, meta, count);
-    $cope.updateListItem($cope.id_, title, meta, count);
-    $cope.displaySaved();
-    $cope.syncNotes();
+    $scope.postNoteJSON($scope.id_, title, meta, count);
+    $scope.updateListItem($scope.id_, title, meta, count);
+    $scope.displaySaved();
+    $scope.syncNotes();
   };
 
-  $cope.createNewNote = function() {
+  $scope.createNewNote = function() {
     var data = { 
       "atoken": [
-      $cope.username,
-      $cope.token,
+      $scope.username,
+      $scope.token,
       ],
       "action": "create",
       "notes": [
       {
-        "username": $cope.username,
+        "username": $scope.username,
       }
       ],
     };
     var myJson = JSON.stringify(data);
     
-    $cope.request("POST", "json", "/n.json", function(res) {
+    $scope.request("POST", "json", "/n.json", function(res) {
       if (res.readyState === 4 && res.status === 200) {
         var fromJSON = JSON.parse( res.responseText )[0];
-        $cope.id_ = fromJSON._id;
+        $scope.id_ = fromJSON._id;
         document.getElementById("note-title").innerHTML = fromJSON.title;
         document.getElementById("note-meta").innerHTML = fromJSON.meta;
         document.getElementById("note-content").innerHTML = fromJSON.content;
@@ -268,24 +272,24 @@ function __notes(oldScope) {
       }
     }, myJson);
 
-    $cope.syncNotes();
+    $scope.syncNotes();
   };
 
-  $cope.loadNote = function(newId) {
-    $cope.syncNotes();
-    if ($cope.sortBy !== undefined) {
-      $cope.sortNotesByAttr($cope.sortBy);
+  $scope.loadNote = function(newId) {
+    $scope.syncNotes();
+    if ($scope.sortBy !== undefined) {
+      $scope.sortNotesByAttr($scope.sortBy);
     }
-    if ($cope.notes !== undefined) {
-      for (var i = $cope.notes.length - 1; i >= 0; i--) {
-        var noteCandidate = $cope.notes[i];
+    if ($scope.notes !== undefined) {
+      for (var i = $scope.notes.length - 1; i >= 0; i--) {
+        var noteCandidate = $scope.notes[i];
         if (noteCandidate._id === newId) {
-          $cope.id_ = newId;
-          $cope.title = noteCandidate.title;
-          $cope.meta = noteCandidate.meta;
-          $cope.content = noteCandidate.content;
+          $scope.id_ = newId;
+          $scope.title = noteCandidate.title;
+          $scope.meta = noteCandidate.meta;
+          $scope.content = noteCandidate.content;
           console.log("returned values were set from local values");
-          $cope.refreshView();
+          $scope.refreshView();
           return;
         }
       }
@@ -294,18 +298,18 @@ function __notes(oldScope) {
     var data = { "action":"readone", "_id": newId };
     var myJson = JSON.stringify(data);
 
-    $cope.request("POST", "json", "/n.json", function(res) {
+    $scope.request("POST", "json", "/n.json", function(res) {
       if (res.readyState === 4 && res.status === 200) {
         var fromJSON = JSON.parse( res.responseText );
-        $cope.id_ = fromJSON._id;
-        $cope.title = fromJSON.title;
-        $cope.meta = fromJSON.meta;
-        $cope.content = fromJSON.content;
-        $cope.refreshView();
+        $scope.id_ = fromJSON._id;
+        $scope.title = fromJSON.title;
+        $scope.meta = fromJSON.meta;
+        $scope.content = fromJSON.content;
+        $scope.refreshView();
         console.log("returned values were set");
       }
     }, myJson);
   };
 }
 
-__notes($cope);
+__notes($scope);

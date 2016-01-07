@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
 import random
 import datetime
+import json
 
 database.user.create_index('username')
 
@@ -114,8 +115,8 @@ class User(Schema):
     @staticmethod
     def create_one(username, password):
         # check to see if the username is unique
-        if User.get_by_username(username) is None:
-            return None
+        if User.get_by_username(username) is not None:
+            return json.dumps({'message': 'Username already taken'})
         collection = getattr(database, User.collection)
         result = collection.insert_one(
             User.to_mongo(username, password,
@@ -123,7 +124,7 @@ class User(Schema):
                 logged_in=datetime.datetime.utcnow())
         )
         id_ = result.inserted_id
-        return id_
+        return json.dumps(str(id_))
 
 class LoginToken(Schema):
     collection = 'logintoken'

@@ -1,19 +1,19 @@
 "use strict";
-/* globals $cope: true */
+/* globals $scope: true */
 
 function __login(oldScope) {
-  $cope = oldScope.clone(oldScope);
-  $cope.authToken = "";
-  $cope.hideConfirmBool = true;
-  $cope.hideConfirmText = ("<input type=\"password\" class=\"form-control\" "+
+  $scope = oldScope.clone(oldScope);
+  $scope.authToken = "";
+  $scope.hideConfirmBool = true;
+  $scope.hideConfirmText = ("<input type=\"password\" class=\"form-control\" "+
     "id=\"confirm-password\" placeholder=\"confirm password\" "+
-    "onblur=\"$cope.checkConfirmMatch();\">");
+    "onblur=\"$scope.checkConfirmMatch();\">");
 
-  $cope.sendLogin = function() {
+  $scope.sendLogin = function() {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
-
-    if (username.length > 0 && password.length) {
+    
+    if (username.length > 0 && password.length > 0) {
       var myRequest = {
         "atoken": [username,""],
         "action": "login",
@@ -23,35 +23,38 @@ function __login(oldScope) {
 
       var myJson = JSON.stringify(myRequest);
 
-      $cope.request("POST", "json", "/u.json", function(res) {
+      $scope.request("POST", "json", "/u.json", function(res) {
         if (res.readyState === 4 && res.status === 200) {
           var response = JSON.parse( res.responseText );
           if (response !== "") {
             console.log("response");
             console.log(response);
-            $cope.authToken = response;
+            $scope.authToken = response;
           } else {
             document.getElementById("password").value = "";
             document.getElementById("message").innerHTML = "Invalid username or password";
           }
         }
       }, myJson);
+
+      console.log('end sendLogin');
+
     } else {
       document.getElementById("message").innerHTML = "Please enter a username and password";
     }
   };
 
-  $cope.hideConfirm = function() {
+  $scope.hideConfirm = function() {
     console.log("hideConfirm");
-    $cope.hideConfirmBool = true;
+    $scope.hideConfirmBool = true;
     // var oldtext = document.getElementById("confirm-holder").innerHTML;
     document.getElementById("confirm-holder").innerHTML = "";
   };
 
-  $cope.showConfirm = function() {
+  $scope.showConfirm = function() {
     console.log("showConfirm");
-    $cope.hideConfirmBool = false;
-    document.getElementById("confirm-holder").innerHTML = $cope.hideConfirmText;
+    $scope.hideConfirmBool = false;
+    document.getElementById("confirm-holder").innerHTML = $scope.hideConfirmText;
 
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
@@ -61,7 +64,7 @@ function __login(oldScope) {
     }
   };
 
-  $cope.checkConfirmMatch = function() {
+  $scope.checkConfirmMatch = function() {
     // TODO(buckbaskin)
     console.log("checkConfirmMatch");
     var password = document.getElementById("password").value;
@@ -75,12 +78,12 @@ function __login(oldScope) {
     }
   };
 
-  $cope.createUser = function() {
+  $scope.createUser = function() {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
 
-    if ($cope.hideConfirmBool) {
-      $cope.showConfirm();
+    if ($scope.hideConfirmBool) {
+      $scope.showConfirm();
     } else {
       if (username.length > 0 && password.length) {
         var myRequest = {
@@ -95,13 +98,13 @@ function __login(oldScope) {
 
         var myJson = JSON.stringify(myRequest);
 
-        $cope.request("POST", "json", "/u.json", function(res) {
+        $scope.request("POST", "json", "/u.json", function(res) {
           if (res.readyState === 4 && res.status === 200) {
             var response = JSON.parse( res.responseText );
             if (response !== "") {
               console.log("response");
               console.log(response);
-              $cope.username = response;
+              $scope.username = response;
             } else {
               document.getElementById("password").value = "";
               document.getElementById("message").innerHTML = "Invalid username or password";
@@ -115,4 +118,4 @@ function __login(oldScope) {
   };
 }
 
-__login($cope);
+__login($scope);

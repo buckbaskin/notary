@@ -2,10 +2,12 @@ from app import server
 from flask import render_template
 from flask import request
 
+import json
+
 import analytics
 
 from users.authenticate import check_auth, AuthError
-from db import User
+from db import User, LoginToken
 
 ##### Users #####
 
@@ -28,22 +30,31 @@ def get_profile_html():
 def operate_users():
     content = request.get_json()
     if content['action'] == 'create':
+        print('create user action')
         return User.create_one(content['username'], content['password'])
     try:
         # raises a Validation error if the request isn't authorized
         check_auth(content)
     except AuthError:
         print('AuthError')
-        return ''
+        return json.dumps({'error': 'invalid credentials'})
     return select_operation(content)
 
 ###
 
 def select_operation(content):
+    print('select operation action')
     if content['action'] == 'create':
         return User.create_one(content['username'], content['password'])
     # TODO(buckbaskin): implement the rest of the API here
-    else:
-        return ''
+    elif content['action'] == 'login':
+        print('login action')
+        if User.check_password(content['username'], content['password']):
+            token = LoginToken.create_one(content['username'])
+            print('token: ', token)
+            return json.dumps(token)
+        else:
+            json.dumps({'error': 'invalid login'})
+    return json.dumps({'error': 'invalid operation'})
 
 ###

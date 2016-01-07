@@ -1,12 +1,12 @@
 "use strict";
-/* globals -$cope */
+/* globals -$scope */
 
-var $cope = {};
+var $scope = {};
 
-$cope.username = "";
-$cope.token = "";
+$scope.username = "";
+$scope.token = "";
 
-$cope.request = function(request, type, url, action, send) {
+$scope.request = function(request, type, url, action, send) {
   var xmlhttp = new XMLHttpRequest();
   
   xmlhttp.open(request, url, true);
@@ -15,15 +15,13 @@ $cope.request = function(request, type, url, action, send) {
   }
 
   xmlhttp.onreadystatechange = function () {
-    console.log('xmlhttp');
-    console.log(xmlhttp.responeText);
     action(xmlhttp);
   };
 
   xmlhttp.send(send);
 };
 
-$cope.clone = function(obj) {
+$scope.clone = function(obj) {
   var copy;
   if (null == obj || "object" !== typeof obj) {
     return obj;
@@ -32,7 +30,7 @@ $cope.clone = function(obj) {
     copy = [];
     var len = obj.length;
     for (var i = 0; i < len; i++) {
-      copy[i] = $cope.clone(obj[i]);
+      copy[i] = $scope.clone(obj[i]);
     }
     return copy;
   }
@@ -40,7 +38,7 @@ $cope.clone = function(obj) {
     copy = {};
     for (var attr in obj) {
       if (obj.hasOwnProperty(attr)) {
-        copy[attr] = $cope.clone(obj[attr]);
+        copy[attr] = $scope.clone(obj[attr]);
       }
     }
     return copy;

@@ -31,12 +31,12 @@
         <div class="col-md-3 note-selector">
             <!-- note selector -->
             <p>Note Selector</p>
-            <input type="button" value="New Note" onclick="$cope.createNewNote();" ></input>
-            <input type="button" value="Sync" onclick="$cope.syncNotes();" ></input>
+            <input type="button" value="New Note" onclick="$scope.createNewNote();" ></input>
+            <input type="button" value="Sync" onclick="$scope.syncNotes();" ></input>
             <p>Sort by:&nbsp;
-                <input type="button" value="Title" onclick="$cope.sortNotesByAttr('title');">
-                <input type="button" value="Meta" onclick="$cope.sortNotesByAttr('meta');">
-                <input type="button" value="Content" onclick="$cope.sortNotesByAttr('content');">
+                <input type="button" value="Title" onclick="$scope.sortNotesByAttr('title');">
+                <input type="button" value="Meta" onclick="$scope.sortNotesByAttr('meta');">
+                <input type="button" value="Content" onclick="$scope.sortNotesByAttr('content');">
             </p>
             <div id="notes-list" class="scrolling">
                 <!-- example note -->
@@ -49,7 +49,7 @@
                 <!-- end example note -->
                 {% if vm['notes'] %}
                 {% for note in vm['notes'] %}
-                <div id="{{ note['_id'] }}" class="row note-preview" onclick="$cope.loadNote( '{{ note['_id'] }}' );">
+                <div id="{{ note['_id'] }}" class="row note-preview" onclick="$scope.loadNote( '{{ note['_id'] }}' );">
                     <div class="intro-line">
                         <h4>{{ note['title'] }}</h4>
                         <p> - |{{ note['meta'] }}|{{ note['content'] }}|</p>
@@ -68,7 +68,7 @@
                 var id_ = "{{ vm.notes[0]._id }}";
                 // Don't do this. It would require writing out everything as json or something...Load this on first sync, note load, etc
                 // var notes = {{ vm['notes'] }};
-                $cope.loadNote(id_);
+                $scope.loadNote(id_);
                 {% else %}
                 var id_ = '567dff3599b4971e04354410';
                 {% endif %}
@@ -76,14 +76,14 @@
             </script>
             <div style="border-bottom: 1px solid black;">
                 <h1>
-                    <div id="note-title" class="editable" contenteditable="true" onblur="$cope.saveAllEdits();" style="display: inline;">Note Editor - New Note</div>
+                    <div id="note-title" class="editable" contenteditable="true" onblur="$scope.saveAllEdits();" style="display: inline;">Note Editor - New Note</div>
                     <div id="saved" style="display: inline;"></div>
                 </h1>
             </div>
-            <div class="editable" contenteditable="true" onblur="$cope.saveAllEdits();" >
+            <div class="editable" contenteditable="true" onblur="$scope.saveAllEdits();" >
                 <h4 id="note-meta" style="border-bottom: 1px solid black; height: 20px; min-width: 20px;">Click here to add meta data</h4>
             </div>
-            <p id="note-content" class="editable" contenteditable="true" onblur="$cope.saveAllEdits();"> Click here to begin taking notes</p>
+            <p id="note-content" class="editable" contenteditable="true" onblur="$scope.saveAllEdits();"> Click here to begin taking notes</p>
         </div>
     </div>
 {% endblock %}
