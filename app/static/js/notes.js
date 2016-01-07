@@ -1,16 +1,16 @@
 "use strict";
 /* globals $cope: true */
 
-function notes(oldScope) {
-  $cope = $cope.clone(oldScope);
+function __notes(oldScope) {
+  $cope = oldScope.clone(oldScope);
   $cope.notes = [];
   $cope.sortBy = "title";
   $cope.title = "";
   $cope.meta = {
-      "tags" : [],
-      "created" : Date.now(),
-      "updated" : Date.now(),
-      "due_date" : undefined
+    "tags" : [],
+    "created" : Date.now(),
+    "updated" : Date.now(),
+    "due_date" : undefined
   };
   $cope.content = "";
   if ($cope.id_ === undefined) {
@@ -23,7 +23,7 @@ function notes(oldScope) {
     var xmlhttp = new XMLHttpRequest();
     
     xmlhttp.open(request, url, true);
-    if (type === "json") {
+    if (type === "json" || true) {
       xmlhttp.setRequestHeader("Content-Type", "application/json");
     }
 
@@ -73,6 +73,8 @@ function notes(oldScope) {
     var myJson = JSON.stringify(myData);
     
     $cope.request("POST", "json", "/n.json", function(res) {
+      console.log('callback');
+      console.log(res);
       if (res.readyState === 4 && res.status === 200) {
         var fromJSON = JSON.parse( res.responseText );
         $cope.id_ = fromJSON._id;
@@ -87,7 +89,7 @@ function notes(oldScope) {
   $cope.updateListItem = function(id_, title, meta, content) {
     for (var i = $cope.notes.length - 1; i >= 0; i--) {
       if ($cope.notes[i]._id === id_) {
-        
+
         $cope.notes[i].title = title;
         $cope.notes[i].meta = meta;
         $cope.notes[i].content = content;
@@ -105,28 +107,35 @@ function notes(oldScope) {
     }, 1000);
   };
 
-  /* jshint ignore:start */
   $cope.buildNotePreviewToHtml = function(id_, title, meta, content) {
     var str_ = `<div id="${id_}" class="row note-preview" onclick="loadNote( \'${id_}\' );">`;
+    console.log(str_);
     str_ = str_ + '<div class="intro-line">';
+    console.log(str_);
     str_ = str_ + '<h4>'+title+'</h4>';
+    console.log(str_);
     str_ = str_ + '<p> - |' + meta+ '|' +content +'|</p>';
+    console.log(str_);
     str_ = str_ + '</div></div>';
+    console.log(str_);
     return str_;
   };
-  /* jshint ignore:end */
 
   $cope.updateListView = function() {
     console.log("updating note-selector view");
+    console.log($cope.notes);
     var accum = "";
     var str_ = "";
-    for (var i = 0; i < notes.length; i++) {
-      var note1 = notes[i];
-      str_ = buildNotePreviewToHtml( // jshint ignore:line
-        note1._id, note1.title, $cope.metaToTags(note1.meta), note1.content
-      );
-      accum = accum + str_;
+    for (var i = 0; i < $cope.notes.length; i++) {
+      var note1 = $cope.notes[i];
+      if (note1 !== undefined) {
+        str_ = $cope.buildNotePreviewToHtml( // jshint ignore:line
+          note1._id, note1.title, $cope.metaToTags(note1.meta), note1.content
+          );
+        accum = accum + str_;
+      }
     }
+    console.log("done updating selector view");
     document.getElementById("notes-list").innerHTML = accum;
   };
 
@@ -158,16 +167,18 @@ function notes(oldScope) {
   };
 
   $cope.syncNotes = function() {
-    
+
     var data = { 
       "action": "update", 
-      "notes": notes
+      "notes": $cope.notes
     };
     var myJson = JSON.stringify(data);
 
     console.log("sync push");
 
     $cope.request("POST", "json", "/n.json", function(res) {
+      console.log('sync push request');
+      console.log(res);
       if (res.readyState === 4 && res.status === 200) {
         var response = JSON.parse( res.responseText );
         if (response.response !== "success") {
@@ -188,18 +199,23 @@ function notes(oldScope) {
     var controlJson = JSON.stringify(control);
 
     $cope.request("POST", "json", "/n.json", function(res) {
+      console.log('sync pull request');
+      console.log(res);
       if (res.readyState === 4 && res.status === 200) {
         var notesFromJSON = JSON.parse( res.responseText );
         if ($cope.notes === undefined) {
           $cope.notes = [];
         }
+        console.log('notes? from json');
         $cope.notes = notesFromJSON;
+        console.log(notesFromJSON);
         if ($cope.sortBy !== undefined) {
           $cope.sortNotesByAttr($cope.sortBy);
         }
         $cope.updateListView();
       }
     }, controlJson);
+    console.log('end sync');
   };
 
   $cope.stringToMeta = function(req) {
@@ -227,18 +243,16 @@ function notes(oldScope) {
   };
 
   $cope.createNewNote = function() {
-    $cope.syncNotes();
-    
     var data = { 
       "atoken": [
-        $cope.username,
-        $cope.token,
+      $cope.username,
+      $cope.token,
       ],
       "action": "create",
       "notes": [
-        {
-          "username": $cope.username,
-        }
+      {
+        "username": $cope.username,
+      }
       ],
     };
     var myJson = JSON.stringify(data);
@@ -294,4 +308,4 @@ function notes(oldScope) {
   };
 }
 
-notes($cope);
+__notes($cope);

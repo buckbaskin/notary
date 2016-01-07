@@ -1,9 +1,9 @@
 "use strict";
 /* globals $cope: true */
 
-function user(oldScope) {
-	$cope = $cope.clone(oldScope);
-	// todo
+function __user(oldScope) {
+    $cope = oldScope.clone(oldScope);
+    // todo
 }
 
-user($cope);
+__user($cope);

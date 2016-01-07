@@ -1,8 +1,8 @@
 "use strict";
 /* globals $cope: true */
 
-function login(oldScope) {
-  $cope = $cope.clone(oldScope);
+function __login(oldScope) {
+  $cope = oldScope.clone(oldScope);
   $cope.authToken = "";
   $cope.hideConfirmBool = true;
   $cope.hideConfirmText = ("<input type=\"password\" class=\"form-control\" "+
@@ -25,16 +25,16 @@ function login(oldScope) {
 
       $cope.request("POST", "json", "/u.json", function(res) {
         if (res.readyState === 4 && res.status === 200) {
-            var response = JSON.parse( res.responseText );
-            if (response !== "") {
-              console.log("response");
-              console.log(response);
-              $cope.authToken = response;
-            } else {
-              document.getElementById("password").value = "";
-              document.getElementById("message").innerHTML = "Invalid username or password";
-            }
+          var response = JSON.parse( res.responseText );
+          if (response !== "") {
+            console.log("response");
+            console.log(response);
+            $cope.authToken = response;
+          } else {
+            document.getElementById("password").value = "";
+            document.getElementById("message").innerHTML = "Invalid username or password";
           }
+        }
       }, myJson);
     } else {
       document.getElementById("message").innerHTML = "Please enter a username and password";
@@ -85,8 +85,8 @@ function login(oldScope) {
       if (username.length > 0 && password.length) {
         var myRequest = {
           "atoken": [
-            username,
-            "",
+          username,
+          "",
           ],
           "action": "create",
           "username": username,
@@ -97,16 +97,16 @@ function login(oldScope) {
 
         $cope.request("POST", "json", "/u.json", function(res) {
           if (res.readyState === 4 && res.status === 200) {
-              var response = JSON.parse( res.responseText );
-              if (response !== "") {
-                console.log("response");
-                console.log(response);
-                $cope.username = response;
-              } else {
-                document.getElementById("password").value = "";
-                document.getElementById("message").innerHTML = "Invalid username or password";
-              }
+            var response = JSON.parse( res.responseText );
+            if (response !== "") {
+              console.log("response");
+              console.log(response);
+              $cope.username = response;
+            } else {
+              document.getElementById("password").value = "";
+              document.getElementById("message").innerHTML = "Invalid username or password";
             }
+          }
         }, myJson);
       } else {
         document.getElementById("message").innerHTML = "Please enter a username and password";
@@ -115,4 +115,4 @@ function login(oldScope) {
   };
 }
 
-login($cope);
+__login($cope);
