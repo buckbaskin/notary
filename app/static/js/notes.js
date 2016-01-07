@@ -1,7 +1,8 @@
 "use strict";
-var $cope = {};
+/* globals $cope: true */
+
 function notes(oldScope) {
-  $cope = clone(oldScope);
+  $cope = $cope.clone(oldScope);
   $cope.notes = [];
   $cope.sortBy = "title";
   $cope.title = "";

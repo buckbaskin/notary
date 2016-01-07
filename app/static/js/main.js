@@ -1,6 +1,12 @@
 "use strict";
+/* globals -$cope */
 
-function request(request, type, url, action, send) {
+var $cope = {};
+
+$cope.username = "";
+$cope.token = "";
+
+$cope.request = function(request, type, url, action, send) {
   var xmlhttp = new XMLHttpRequest();
   
   xmlhttp.open(request, url, true);
@@ -13,18 +19,18 @@ function request(request, type, url, action, send) {
   };
 
   xmlhttp.send(send);
-}
+};
 
-function clone(obj) {
+$cope.clone = function(obj) {
 	var copy;
-	if (null == obj || "object" != typeof obj) {
+	if (null == obj || "object" !== typeof obj) {
 		return obj;
 	}
 	if (obj instanceof Array) {
 		copy = [];
 		var len = obj.length;
 		for (var i = 0; i < len; i++) {
-			copy[i] = clone(obj[i]);
+			copy[i] = $cope.clone(obj[i]);
 		}
 		return copy;
 	}
@@ -32,12 +38,10 @@ function clone(obj) {
 		copy = {};
 		for (var attr in obj) {
 			if (obj.hasOwnProperty(attr)) {
-				copy[attr] = clone(obj[attr]);
+				copy[attr] = $cope.clone(obj[attr]);
 			}
 		}
 		return copy;
 	}
 	throw new Error("Unable to copy obj! Its type isn't supported");
-}
-
-var $cope = {};
+};
