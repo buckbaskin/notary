@@ -58,7 +58,15 @@ function showConfirm() {
 function checkConfirmMatch() {
   // TODO(buckbaskin)
   console.log("checkConfirmMatch");
-  return true;
+  var password = document.getElementById("password").value;
+  var confirmPassword = document.getElementById("confirm-password").value;
+  if (password === confirmPassword) {
+    document.getElementById("confirm-password").style['background-color'] = "green";
+    return true;
+  } else {
+    document.getElementById("confirm-password").style['background-color'] = "red";
+    return false;
+  }
 }
 
 function createUser() {
