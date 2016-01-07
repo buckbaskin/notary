@@ -16,18 +16,18 @@
 				<input type="text" class="form-control" id="username" name="username" placeholder="username">
 				<input type="password" class="form-control" id="password" placeholder="password">
 				<div id="confirm-holder">
-					<input type="password" class="form-control" id="confirm-password" placeholder="confirm password" onblur="checkConfirmMatch();">
+					<input type="password" class="form-control" id="confirm-password" placeholder="confirm password" onblur="$cope.checkConfirmMatch();">
 				</div>
 				<div class="col-md-6">
-					<input type="button" class="btn btn-default my-btn" value="Login" onclick="sendLogin();">
+					<input type="button" class="btn btn-default my-btn" value="Login" onclick="$cope.sendLogin();">
 				</div>
 				<div class="col-md-6">
-					<input type="button" class="btn btn-default my-btn" value="Create User" onclick="createUser();">
+					<input type="button" class="btn btn-default my-btn" value="Create User" onclick="$cope.createUser();">
 				</div>
 				
 			</div>
 		</div>
 	</div>
-	<style onload="hideConfirm();">
+	<style onload="$cope.hideConfirm();">
 	</style>
 {% endblock %}
