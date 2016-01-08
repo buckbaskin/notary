@@ -15,6 +15,7 @@ from notes import routes
 def index():
     vm = {}
     vm['title'] = ''
+    print('render_template(index.html, vm=vm)')
     return render_template('index.html', vm=vm)
 
 ##### Error Handling #####
