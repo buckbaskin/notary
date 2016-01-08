@@ -51,7 +51,6 @@ def select_operation(content):
         print('login action')
         if User.check_password(content['username'], content['password']):
             token = LoginToken.create_one(content['username'])
-            print('token: ', token)
             return json.dumps(token)
         else:
             json.dumps({'error': 'invalid login'})

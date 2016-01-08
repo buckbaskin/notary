@@ -89,26 +89,15 @@ def trace(function):
         call_vargs = vargs
         try:
             val = function(*args, **vargs)
+            save_call(fname=call_name, params=call_params, args=call_args,
+                vargs=call_vargs, ret_val=val)
+            return val
         except Exception as e:
             try:
                 save_err_call(fname=call_name, params=call_params,
                     args=call_args, vargs=call_vargs, error=e)
-            except pymongo.errors.PyMongoError as pme:
-                # TODO(buckbaskin): for now, don't do anything on a Mongo error
-                pass
             finally:
                 raise e
-        finally:
-            try:
-                save_call(fname=call_name, params=call_params, args=call_args,
-                    vargs=call_vargs, ret_val=val)
-                return val
-            except pymongo.errors.PyMongoError as pme:
-                # TODO(buckbaskin): for now, don't do anything on a Mongo error
-                pass
-            except NameError:
-                # TODO(buckbaskin): if val is undefined, don't do anything for
-                #  now (probably an exception above)
-                return
-        
+            
+
     return wrapped_function

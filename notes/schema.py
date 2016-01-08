@@ -108,19 +108,19 @@ class Note(Schema):
         # note_obj['meta']['version'] = 0
         # note_obj['meta']['created'] = datetime.datetime.utcnow()
         print('create_from_object 1', type(note_obj))
-        try:
-            indicial_craziness_factorial_sepuku = {
-            'title': 'New Note',
-            'meta': {'tags': []},
-            'content': 'begin typing here'
-            }
-            # to_insert = Note.to_mongo(username, note_obj['title'], note_obj['meta'],
-            #     note_obj['content'], note_obj['version'], note_obj['created'])
-        except:
-            print('except 1234567890')
-            return 'error code'
+        indicial_craziness_factorial = {
+        'title': 'New Note',
+        'meta': {'tags': []},
+        'content': 'begin typing here'
+        }
+        if 'title' in note_obj:
+            indicial_craziness_factorial['title'] = note_obj['title']
+        if 'meta' in note_obj:
+            indicial_craziness_factorial['meta'] = note_obj['meta']
+        if 'content' in note_obj:
+            indicial_craziness_factorial['content'] = note_obj['content']
         print('create_from_object 3')
-        result = collection.insert_one( indicial_craziness_factorial_sepuku )
+        result = collection.insert_one( indicial_craziness_factorial )
         id_ = result.inserted_id
         print('create_from_object 2 id')
         return str(id_)

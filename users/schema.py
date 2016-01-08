@@ -151,13 +151,9 @@ class LoginToken(Schema):
 
     @staticmethod
     def check_token(username, token):
-        print('username, token')
-        print(username, token)
         collection = getattr(database, LoginToken.collection)
         cursor = collection.find({'username': username, 'token': token})
         for token in cursor:
-            print('token found')
-            return True
             time_delta = datetime.datetime.utcnow() - token['created']
             if time_delta.total_seconds() < 300:
                 return True
