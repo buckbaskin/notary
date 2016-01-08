@@ -4,6 +4,8 @@
         div.note-preview {
             height: 96px;
             padding: 10px;
+            margin-left: 1px;
+            margin-right: 1px;
             border-top: 1px solid black;
             border-bottom: 1px solid black;
             word-wrap: normal;
@@ -20,6 +22,12 @@
             border-right: 1px solid black;
             height: 100%;
         }
+        #notes-list-header {
+            width: 100%;
+        }
+        #notes-list {
+            height: 70%;
+        }
         .scrolling {
             overflow-y: auto;
             overflow-x: hidden;
@@ -30,14 +38,16 @@
     <div class="row">
         <div class="col-md-3 note-selector">
             <!-- note selector -->
-            <p>Note Selector</p>
-            <input type="button" value="New Note" onclick="$scope.createNewNote();" ></input>
-            <input type="button" value="Sync" onclick="$scope.syncNotes();" ></input>
-            <p>Sort by:&nbsp;
-                <input type="button" value="Title" onclick="$scope.sortNotesByAttr('title');">
-                <input type="button" value="Meta" onclick="$scope.sortNotesByAttr('meta');">
-                <input type="button" value="Content" onclick="$scope.sortNotesByAttr('content');">
-            </p>
+            <div id="notes-list-header">
+                <p>Note Selector</p>
+                <input type="button" value="New Note" onclick="$scope.createNewNote();" ></input>
+                <input type="button" value="Sync" onclick="$scope.syncNotes();" ></input>
+                <p>Sort by:&nbsp;
+                    <input type="button" value="Title" onclick="$scope.sortNotesByAttr('title');">
+                    <input type="button" value="Meta" onclick="$scope.sortNotesByAttr('meta');">
+                    <input type="button" value="Content" onclick="$scope.sortNotesByAttr('content');">
+                </p>
+            </div>
             <div id="notes-list" class="scrolling">
                 <!-- example note -->
                 <!-- <div class="row note-preview">
