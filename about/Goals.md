@@ -18,9 +18,8 @@ Major version is first release of nice interface (1.0.0) which will freeze all A
 - make meta data list a dict that includes the tag list, but also date created, etc.
 
 ### 0.2.0 - Clone back end, "front end"
-- match functionality of exposed Evernote API
+- match some functionality of exposed Evernote API
 - Implement Users, login, associating notes with users
-- Implement Notebooks, Tags and Saved Searches
 - web interface that does basic note creation
 
 ### 0.3.0- Hidden HTML 1, versions and sharing
@@ -28,7 +27,8 @@ Major version is first release of nice interface (1.0.0) which will freeze all A
 - save point versioning of notes. Start and end of every user editing session (no edits for >5 min or user clicks save?
 - note sharing link generator. Creates as public, read only copy of the note at a given point, with option to link to latest version of the note
 
-### 0.4.0 - Organization Client Side
+### 0.4.0 - Note Organization
+- Implement Notebooks, Tags
 - organize notes by notebooks
 - a page/tab for managing tags (items in meta data list)
 - a page/tab for managing notebooks
@@ -43,6 +43,7 @@ Major version is first release of nice interface (1.0.0) which will freeze all A
 ### 0.6.0 - Full Text Search
 - hook into Evernote API
 - text search of notes
+- Implement Saved Searches
 
 ### 0.7.0 - Testing
 - develop unittests for each of the modules that are used
