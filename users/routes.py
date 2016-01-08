@@ -11,19 +11,23 @@ from db import User, LoginToken
 
 ##### Users #####
 
-@analytics.trace
 @server.route('/login', methods=['GET'])
-def get_login_html():
-    vm = {}
-    vm['title'] = 'Login to Notary'
-    return render_template('login.html', vm=vm)
+def login_page():
+    @analytics.trace
+    def get_login_html():
+        vm = {}
+        vm['title'] = 'Login to Notary'
+        return render_template('login.html', vm=vm)
+    return get_login_html()
 
-@analytics.trace
 @server.route('/profile', methods=['GET'])
-def get_profile_html():
-    vm = {}
-    vm['title'] = 'Your Profile'
-    return render_template('user.html', vm=vm)
+def profile_page():
+    @analytics.trace
+    def get_profile_html():
+        vm = {}
+        vm['title'] = 'Your Profile'
+        return render_template('user.html', vm=vm)
+    return get_profile_html()
 
 @analytics.trace
 @server.route('/u.json', methods=['POST'])

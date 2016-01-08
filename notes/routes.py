@@ -14,48 +14,52 @@ from users.authenticate import check_auth, AuthError
 
 ##### Notes #####
 
-@analytics.trace
 @server.route('/notes', methods=['GET'])
-def notes_html():
-    vm = {}
-    vm['title'] = 'Your Notes'
-    cursor = Note.get_all()
-    vm['notes'] = []
+def notes_page():
+    @analytics.trace
+    def notes_html():
+        vm = {}
+        vm['title'] = 'Your Notes'
+        cursor = Note.get_all()
+        vm['notes'] = []
 
-    for note in cursor:
-        vm['notes'].append(clean_note_for_json(note))
-    return render_template('notes.html', vm=vm)
+        for note in cursor:
+            vm['notes'].append(clean_note_for_json(note))
+        return render_template('notes.html', vm=vm)
+    return notes_html()
 
-@analytics.trace
 @server.route('/n.json', methods=['POST'])
-def operate_notes():
-    content = request.get_json()
-    try:
-        # raises a Validation error if the request isn't authorized
-        check_auth(content)
-    except AuthError:
-        print('Auth Error, empty response')
-        return json.dumps({'redirect': 'http://localhost:5000/login'})
+def notes_api():
+    @analytics.trace
+    def operate_notes():
+        content = request.get_json()
+        try:
+            # raises a Validation error if the request isn't authorized
+            check_auth(content)
+        except AuthError:
+            print('Auth Error, empty response')
+            return json.dumps({'redirect': 'http://localhost:5000/login'})
 
-    if 'action' not in content:
-        print('action not in content')
-        return ''
-    else:
-        if content['action'] == 'create':
-            print('create action')
-            return create_notes(content)
-        elif len(content['action']) >= 4 and content['action'][:4] == 'read':
-            print('select_read action')
-            return select_read(content)
-        elif content['action'] == 'update':
-            print('update action')
-            return update_notes(content)
-        elif content['action'] == 'delete':
-            print('delete action')
-            return delete_notes(content)
-        else:
-            print('request did not match API')
+        if 'action' not in content:
+            print('action not in content')
             return ''
+        else:
+            if content['action'] == 'create':
+                print('create action')
+                return create_notes(content)
+            elif len(content['action']) >= 4 and content['action'][:4] == 'read':
+                print('select_read action')
+                return select_read(content)
+            elif content['action'] == 'update':
+                print('update action')
+                return update_notes(content)
+            elif content['action'] == 'delete':
+                print('delete action')
+                return delete_notes(content)
+            else:
+                print('request did not match API')
+                return ''
+    return operate_notes()
 
 ###
 @analytics.trace

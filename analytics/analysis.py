@@ -10,7 +10,6 @@ for record in collection.find():
     if record['function-name'] not in fnames:
         fnames[record['function-name']] = 0
     fnames[record['function-name']] += 1
-    print('record[]', record['function-name'], record['date-utc'])
 
 for name, count in fnames.items():
     print('function %s was called %d times' % (name, count))
