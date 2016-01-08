@@ -10,13 +10,23 @@ from notes import routes
 
 ##### Index #####
 
+# @analytics.trace
+# @server.route('/', methods=['GET'])
+# def index():
+#     vm = {}
+#     vm['title'] = ''
+#     print('render_template(index.html, vm=vm)')
+#     return render_template('index.html', vm=vm)
+
 @analytics.trace
 @server.route('/', methods=['GET'])
 def index():
     vm = {}
     vm['title'] = ''
     print('render_template(index.html, vm=vm)')
-    return render_template('index.html', vm=vm)
+    colloquim = render_template('index.html', vm=vm)
+    print(colloquim)
+    return str(colloquim), 200
 
 ##### Error Handling #####
 

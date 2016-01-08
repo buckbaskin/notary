@@ -90,9 +90,10 @@ def trace(function):
         print('wrapped_function 2')
         try:
             val = function(*args, **vargs)
+            print('type(', type(val))
             print('trace save ', call_name)
             save_call(fname=call_name, params=call_params, args=call_args,
-                vargs=call_vargs, ret_val=val)
+                vargs=call_vargs, ret_val=str(val))
             print('wrapped_function 3')
             return val
         except Exception as e:
