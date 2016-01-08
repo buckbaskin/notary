@@ -63,4 +63,5 @@ Major version is first release of nice interface (1.0.0) which will freeze all A
 - when searching for notes, send out a request for the notes that match, but filter existing notes in the browser while waiting for a response and append the response later, then sort it in
 
 ### 1.3.0 - Web connectivity
+- implement the capability for emailing notes
 - implement a chrome extension that does web clipping functionality
