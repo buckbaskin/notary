@@ -31,8 +31,8 @@ class Note(Schema):
         }
         newm = dict(base, **add_)
         newm['version'] = version
-
-        return newm
+        print('newm from to_mongo: ', newm)
+        return dict(newm)
 
     @staticmethod
     def get_all(sort=None):
@@ -96,21 +96,34 @@ class Note(Schema):
     @staticmethod
     def create_from_object(note_obj, username):
         collection = getattr(database, Note.collection)
-        if 'title' not in note_obj:
-            note_obj['title'] = 'New Note'
-        if 'meta' not in note_obj:
-            meta = {}
-            meta['tags'] = []
-        if 'content' not in note_obj:
-            content = 'Take notes here'
-        note_obj['version'] = 0
-        note_obj['created'] = datetime.datetime.utcnow()
-        result = collection.insert_one(
-            Note.to_mongo(username, note_obj['title'], note_obj['meta'],
-                note_obj['content'], note_obj['version'], note_obj['created'])
-        )
+        # note_obj = dict(note_obj)
+        # print('type of note_obj, ', type(note_obj))
+        # if 'title' not in note_obj:
+        #     note_obj['title'] = 'New Note'
+        # if 'meta' not in note_obj:
+        #     meta = {}
+        #     meta['tags'] = []
+        # if 'content' not in note_obj:
+        #     content = 'Take notes here'
+        # note_obj['meta']['version'] = 0
+        # note_obj['meta']['created'] = datetime.datetime.utcnow()
+        print('create_from_object 1', type(note_obj))
+        try:
+            indicial_craziness_factorial_sepuku = {
+            'title': 'New Note',
+            'meta': {'tags': []},
+            'content': 'begin typing here'
+            }
+            # to_insert = Note.to_mongo(username, note_obj['title'], note_obj['meta'],
+            #     note_obj['content'], note_obj['version'], note_obj['created'])
+        except:
+            print('except 1234567890')
+            return 'error code'
+        print('create_from_object 3')
+        result = collection.insert_one( indicial_craziness_factorial_sepuku )
         id_ = result.inserted_id
-        return id_
+        print('create_from_object 2 id')
+        return str(id_)
 
     # @staticmethod
     # def create_one():

@@ -47,6 +47,7 @@ $scope.clone = function(obj) {
 };
 
 $scope.try_cookie = function () {
+  console.log('try_cookie');
   try {
     var items = document.cookie.split(";");
     for (var i = 0; i < items.length; i++) {
@@ -57,12 +58,13 @@ $scope.try_cookie = function () {
       var spliter = c.indexOf('=');
       var property = c.substring(0,spliter);
       var value = c.substring(spliter+1, c.length);
-      console.log('try cookie: ', property, ';;',value);
+      
       if (property === 'atoken') {
+        console.log('try cookie got atoken');
         $scope.authToken = value;
       }
       if (property === 'username') {
-        console.log('set username from cookie');
+        console.log('try cookie got username');
         $scope.username = value;
       }
     };

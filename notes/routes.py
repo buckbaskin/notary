@@ -60,9 +60,17 @@ def operate_notes():
 ###
 @analytics.trace
 def create_notes(content):
+    print('inside create_notes')
     note_objects = content['notes']
+    print(note_objects)
     username = content['atoken'][0]
-    new_ids = [Note.create_from_object(obj, username) for obj in note_objects]
+    print('username', username)
+    # new_ids = [Note.create_from_object(obj, username) for obj in note_objects]
+    new_ids = []
+    for obj in note_objects:
+        print ('round 1')
+        new_ids.append(Note.create_from_object(obj, username))
+    print('len new ids', new_ids)
     return map(get_note, new_ids)
 
 # @analytics.trace

@@ -98,21 +98,14 @@ function __notes(oldScope) {
 
   $scope.buildNotePreviewToHtml = function(id_, title, meta, content) {
     var str_ = `<div id="${id_}" class="row note-preview" onclick="$scope.loadNote( \'${id_}\' );">`;
-    console.log(str_);
     str_ = str_ + '<div class="intro-line">';
-    console.log(str_);
     str_ = str_ + '<h4>'+title+'</h4>';
-    console.log(str_);
     str_ = str_ + '<p> - |' + meta+ '|' +content +'|</p>';
-    console.log(str_);
     str_ = str_ + '</div></div>';
-    console.log(str_);
     return str_;
   };
 
   $scope.updateListView = function() {
-    console.log("updating note-selector view");
-    console.log($scope.notes);
     var accum = "";
     var str_ = "";
     for (var i = 0; i < $scope.notes.length; i++) {
@@ -124,7 +117,7 @@ function __notes(oldScope) {
         accum = accum + str_;
       }
     }
-    console.log("done updating selector view");
+    // console.log("done updating selector view");
     document.getElementById("notes-list").innerHTML = accum;
   };
 
@@ -164,7 +157,7 @@ function __notes(oldScope) {
     };
     var myJson = JSON.stringify(data);
 
-    console.log("sync push");
+    // console.log("sync push");
 
     $scope.request("POST", "json", "/n.json", function(res) {
       if (res.readyState === 4 && res.status === 200) {
@@ -178,7 +171,7 @@ function __notes(oldScope) {
       }
     }, myJson);
 
-    console.log("sync pull");
+    // console.log("sync pull");
 
     var control = {
       "atoken": [$scope.username, $scope.authToken],
@@ -207,7 +200,7 @@ function __notes(oldScope) {
         $scope.updateListView();
       }
     }, controlJson);
-    console.log('end sync');
+    // console.log('end sync');
   };
 
   $scope.stringToMeta = function(req) {
@@ -253,7 +246,7 @@ function __notes(oldScope) {
         document.getElementById("note-title").innerHTML = fromJSON.title;
         document.getElementById("note-meta").innerHTML = fromJSON.meta;
         document.getElementById("note-content").innerHTML = fromJSON.content;
-        console.log("returned values were set");
+        console.log("create returned values were set");
       }
     }, myJson);
 
@@ -299,6 +292,8 @@ function __notes(oldScope) {
       }
     }, myJson);
   };
+
+  $scope.try_cookie();
 }
 
 __notes($scope);

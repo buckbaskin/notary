@@ -8,8 +8,6 @@ def check_login(content):
     return User.check_password(content['username'], content['password'])
 
 def check_auth(content):
-    print('content')
-    print(content)
     if 'atoken' not in content:
         raise AuthError()
     else:
