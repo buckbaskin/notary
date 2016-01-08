@@ -80,30 +80,22 @@ def save_err_call(fname, params=(), args=(), vargs=None, error=None):
     return inserted_record.inserted_id
 
 def trace(function):
-    print('trace: ', function.__name__)
     def wrapped_function(*args, **vargs):
         print('wrapped_function 1')
         call_name = function.__name__
         call_params = function.__code__.co_varnames
         call_args = args
         call_vargs = vargs
-        print('wrapped_function 2')
         try:
             val = function(*args, **vargs)
-            print('type(', type(val))
-            print('trace save ', call_name)
             save_call(fname=call_name, params=call_params, args=call_args,
                 vargs=call_vargs, ret_val=str(val))
-            print('wrapped_function 3')
             return val
         except Exception as e:
             try:
                 print('trace error ', call_name)
                 save_err_call(fname=call_name, params=call_params,
                     args=call_args, vargs=call_vargs, error=e)
-                print('wrapped_function 4')
             finally:
-                print('wrapped_function 5')
                 raise e
-    print('wrapped_function 6')
     return wrapped_function

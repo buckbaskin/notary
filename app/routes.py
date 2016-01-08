@@ -10,14 +10,6 @@ from notes import routes
 
 ##### Index #####
 
-# @analytics.trace
-# @server.route('/', methods=['GET'])
-# def index():
-#     vm = {}
-#     vm['title'] = ''
-#     print('render_template(index.html, vm=vm)')
-#     return render_template('index.html', vm=vm)
-
 @server.route('/', methods=['GET'])
 def index():
     @analytics.trace

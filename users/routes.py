@@ -29,20 +29,22 @@ def profile_page():
         return render_template('user.html', vm=vm)
     return get_profile_html()
 
-@analytics.trace
 @server.route('/u.json', methods=['POST'])
-def operate_users():
-    content = request.get_json()
-    if content['action'] == 'create':
-        print('create user action')
-        return User.create_one(content['username'], content['password'])
-    try:
-        # raises a Validation error if the request isn't authorized
-        check_auth(content)
-    except AuthError:
-        print('AuthError')
-        return json.dumps({'error': 'invalid credentials'})
-    return select_operation(content)
+def users_api():
+    @analytics.trace
+    def operate_users():
+        content = request.get_json()
+        if content['action'] == 'create':
+            print('create user action')
+            return User.create_one(content['username'], content['password'])
+        try:
+            # raises a Validation error if the request isn't authorized
+            check_auth(content)
+        except AuthError:
+            print('AuthError')
+            return json.dumps({'error': 'invalid credentials'})
+        return select_operation(content)
+    return operate_users()
 
 ###
 
