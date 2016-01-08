@@ -19,21 +19,6 @@ function __notes(oldScope) {
   $scope.token = "";
   $scope.username = "";
 
-  $scope.request = function(request, type, url, action, send) {
-    var xmlhttp = new XMLHttpRequest();
-    
-    xmlhttp.open(request, url, true);
-    if (type === "json" || true) {
-      xmlhttp.setRequestHeader("Content-Type", "application/json");
-    }
-
-    xmlhttp.onreadystatechange = function() {
-      action(xmlhttp);
-    };
-
-    xmlhttp.send(send);
-  };
-
   $scope.metaToTags = function(meta) {
     var tags = meta.tags;
     return tags.join(", ");
@@ -67,6 +52,7 @@ function __notes(oldScope) {
       "content" : content
     };
     var myData = {
+      "atoken": [$scope.username, $scope.authToken],
       "action": "update", 
       "notes": [ myNote ]
     };
@@ -78,7 +64,7 @@ function __notes(oldScope) {
       if (res.readyState === 4 && res.status === 200) {
         var fromJSON = JSON.parse( res.responseText );
         if (fromJSON.redirect !== undefined) {
-          window.location = fromJSON.redirect;
+          // window.location = fromJSON.redirect;
         }
         $scope.id_ = fromJSON._id;
         $scope.title = fromJSON.title;
@@ -111,7 +97,7 @@ function __notes(oldScope) {
   };
 
   $scope.buildNotePreviewToHtml = function(id_, title, meta, content) {
-    var str_ = `<div id="${id_}" class="row note-preview" onclick="loadNote( \'${id_}\' );">`;
+    var str_ = `<div id="${id_}" class="row note-preview" onclick="$scope.loadNote( \'${id_}\' );">`;
     console.log(str_);
     str_ = str_ + '<div class="intro-line">';
     console.log(str_);
@@ -171,9 +157,10 @@ function __notes(oldScope) {
 
   $scope.syncNotes = function() {
 
-    var data = { 
+    var data = {
+      "atoken": [$scope.username, $scope.authToken],
       "action": "update", 
-      "notes": $scope.notes
+      "notes": $scope.notes,
     };
     var myJson = JSON.stringify(data);
 
@@ -183,7 +170,7 @@ function __notes(oldScope) {
       if (res.readyState === 4 && res.status === 200) {
         var response = JSON.parse( res.responseText );
         if (response.redirect !== undefined) {
-          window.location = response.redirect;
+          // window.location = response.redirect;
         }
         if (response.response !== "success") {
           console.log("sync push error");
@@ -194,10 +181,11 @@ function __notes(oldScope) {
     console.log("sync pull");
 
     var control = {
+      "atoken": [$scope.username, $scope.authToken],
       "action": "readmany",
       "sort_by": $scope.sortBy,
       "page": 0,
-      "count": 100
+      "count": 100,
     };
 
     var controlJson = JSON.stringify(control);
@@ -248,10 +236,7 @@ function __notes(oldScope) {
 
   $scope.createNewNote = function() {
     var data = { 
-      "atoken": [
-      $scope.username,
-      $scope.token,
-      ],
+      "atoken": [$scope.username, $scope.authToken],
       "action": "create",
       "notes": [
       {
@@ -295,7 +280,11 @@ function __notes(oldScope) {
       }
     }
 
-    var data = { "action":"readone", "_id": newId };
+    var data = { 
+      "atoken": [ $scope.username, $scope.authToken ],
+      "action":"readone", 
+      "_id": newId,
+    };
     var myJson = JSON.stringify(data);
 
     $scope.request("POST", "json", "/n.json", function(res) {

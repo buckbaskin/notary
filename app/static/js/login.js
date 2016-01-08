@@ -30,6 +30,10 @@ function __login(oldScope) {
             console.log("response");
             console.log(response);
             $scope.authToken = response;
+            $scope.username = username;
+            document.cookie = 'username='+$scope.username;
+            document.cookie = 'atoken='+$scope.authToken;
+            console.log(document.cookie);
           } else {
             document.getElementById("password").value = "";
             document.getElementById("message").innerHTML = "Invalid username or password";
