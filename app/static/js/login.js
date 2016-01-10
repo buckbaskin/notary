@@ -36,6 +36,8 @@ function __login(oldScope) {
             document.cookie = 'username='+$scope.username;
             document.cookie = 'atoken='+$scope.authToken;
             console.log(document.cookie);
+            console.log('winwinwin', 'http://localhost:5000/notes');
+            window.location = 'http://localhost:5000/notes';
           } else {
             document.getElementById("password").value = "";
             document.getElementById("message").innerHTML = "Invalid username or password";
