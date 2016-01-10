@@ -10,8 +10,10 @@ def check_login(content):
 def check_auth(content):
     if 'atoken' not in content:
         raise AuthError()
-    else:
-        return LoginToken.check_token(*content['atoken'])
+    elif not LoginToken.check_token(*content['atoken']):
+        print('login token did not match')
+        raise AuthError()
+    return True
 
 
 

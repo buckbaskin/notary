@@ -47,6 +47,7 @@ function __notes(oldScope) {
 
   $scope.postNoteJSON = function(id_, title, meta, content) {
     var myNote = {
+      "_id": id_,
       "title" : title,
       "meta" : meta,
       "content" : content
@@ -59,12 +60,11 @@ function __notes(oldScope) {
     var myJson = JSON.stringify(myData);
     
     $scope.request("POST", "json", "/n.json", function(res) {
-      console.log('callback');
-      console.log(res);
       if (res.readyState === 4 && res.status === 200) {
         var fromJSON = JSON.parse( res.responseText );
         if (fromJSON.redirect !== undefined) {
-          // window.location = fromJSON.redirect;
+          console.log('redirect...')
+          window.location = fromJSON.redirect;
         }
         $scope.id_ = fromJSON._id;
         $scope.title = fromJSON.title;
@@ -149,7 +149,7 @@ function __notes(oldScope) {
   };
 
   $scope.syncNotes = function() {
-
+    console.log('syncing notes...');
     var data = {
       "atoken": [$scope.username, $scope.authToken],
       "action": "update", 
@@ -157,21 +157,20 @@ function __notes(oldScope) {
     };
     var myJson = JSON.stringify(data);
 
-    // console.log("sync push");
+    console.log("sync push");
 
     $scope.request("POST", "json", "/n.json", function(res) {
       if (res.readyState === 4 && res.status === 200) {
         var response = JSON.parse( res.responseText );
         if (response.redirect !== undefined) {
-          // window.location = response.redirect;
+          console.log('redirect...')
+          window.location = response.redirect;
         }
         if (response.response !== "success") {
           console.log("sync push error");
         }
       }
     }, myJson);
-
-    // console.log("sync pull");
 
     var control = {
       "atoken": [$scope.username, $scope.authToken],
@@ -185,6 +184,7 @@ function __notes(oldScope) {
 
     $scope.request("POST", "json", "/n.json", function(res) {
       if (res.readyState === 4 && res.status === 200) {
+        console.log('sync pull res ', res)
         var notesFromJSON = JSON.parse( res.responseText );
         if ($scope.notes === undefined) {
           $scope.notes = [];
@@ -197,6 +197,7 @@ function __notes(oldScope) {
         if ($scope.sortBy !== undefined) {
           $scope.sortNotesByAttr($scope.sortBy);
         }
+        console.log("sync pull");
         $scope.updateListView();
       }
     }, controlJson);
@@ -282,6 +283,7 @@ function __notes(oldScope) {
 
     $scope.request("POST", "json", "/n.json", function(res) {
       if (res.readyState === 4 && res.status === 200) {
+        console.log('res', res);
         var fromJSON = JSON.parse( res.responseText );
         $scope.id_ = fromJSON._id;
         $scope.title = fromJSON.title;

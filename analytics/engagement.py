@@ -81,7 +81,6 @@ def save_err_call(fname, params=(), args=(), vargs=None, error=None):
 
 def trace(function):
     def wrapped_function(*args, **vargs):
-        print('wrapped_function 1')
         call_name = function.__name__
         call_params = function.__code__.co_varnames
         call_args = args

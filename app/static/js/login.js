@@ -12,6 +12,7 @@ function __login(oldScope) {
   $scope.sendLogin = function() {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
+    console.log(username, password);
     
     if (username.length > 0 && password.length > 0) {
       var myRequest = {
@@ -26,7 +27,8 @@ function __login(oldScope) {
       $scope.request("POST", "json", "/u.json", function(res) {
         if (res.readyState === 4 && res.status === 200) {
           var response = JSON.parse( res.responseText );
-          if (response !== "") {
+          console.log('login res', response);
+          if (response !== "" && (typeof response === "string")) {
             console.log("response");
             console.log(response);
             $scope.authToken = response;

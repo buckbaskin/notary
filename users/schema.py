@@ -157,4 +157,8 @@ class LoginToken(Schema):
             time_delta = datetime.datetime.utcnow() - token['created']
             if time_delta.total_seconds() < 300:
                 return True
+            else:
+                print('expired token')
+                return False
+        print('no matching tokens in cursor')
         return False

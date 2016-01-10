@@ -37,11 +37,18 @@ def users_api():
         if content['action'] == 'create':
             print('create user action')
             return User.create_one(content['username'], content['password'])
+        elif content['action'] == 'login':
+            print('login action')
+            if User.check_password(content['username'], content['password']):
+                token = LoginToken.create_one(content['username'])
+                return json.dumps(token)
+            else:
+                json.dumps({'error': 'invalid login'})
         try:
             # raises a Validation error if the request isn't authorized
             check_auth(content)
         except AuthError:
-            print('AuthError')
+            print('AuthError, invalid credentials')
             return json.dumps({'error': 'invalid credentials'})
         return select_operation(content)
     return operate_users()

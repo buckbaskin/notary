@@ -20,7 +20,7 @@ def notes_page():
     def notes_html():
         vm = {}
         vm['title'] = 'Your Notes'
-        cursor = Note.get_all()
+        cursor = []
         vm['notes'] = []
 
         for note in cursor:
@@ -37,7 +37,7 @@ def notes_api():
             # raises a Validation error if the request isn't authorized
             check_auth(content)
         except AuthError:
-            print('Auth Error, empty response')
+            print('Auth Error, redirect to login')
             return json.dumps({'redirect': 'http://localhost:5000/login'})
 
         if 'action' not in content:
@@ -108,9 +108,9 @@ def get_notes(content):
     #TODO(buckbaskin): this needs more implementation
     if 'sort_by' in content:
         print('get notes sort by')
-        cursor = Note.get_all(sort=content['sort_by'])
+        cursor = Note.get_all(username=content['atoken'][0], sort=content['sort_by'])
     else:
-        cursor = Note.get_all()
+        cursor = Note.get_all(username=content['atoken'][0])
 
     notes = []
     for note in cursor:
@@ -126,7 +126,7 @@ def update_notes(content):
     for note in content['notes']:
         note = clean_note_from_json(note)
         Note.update_one(note['_id'], note['title'], note['meta'],
-            note['content'])
+            note['content'], content['atoken'][0])
     return json.dumps({'response': 'success'})
 
 @analytics.trace

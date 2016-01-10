@@ -35,7 +35,7 @@ class Note(Schema):
         return dict(newm)
 
     @staticmethod
-    def get_all(sort=None):
+    def get_all(username, sort=None):
         collection = getattr(database, Note.collection)
         if sort in Note.valid_sorts:
             if sort[:1] == '-':
@@ -44,13 +44,13 @@ class Note(Schema):
             else:
                 order = 1
             print('sort: ' + str(sort) + ' order:' + str(order))
-            cursor = collection.find().sort([(sort, order)])
+            cursor = collection.find({'username': username}).sort([(sort, order)])
         else:
-            cursor = collection.find()
+            cursor = collection.find({'username': username})
         return cursor
 
     @staticmethod
-    def update_one(id_, title, meta, content):
+    def update_one(id_, title, meta, content, username=None):
         collection = getattr(database, Note.collection)
         # TODO(buckbaskin): use the unused result to check for errors in update
 
@@ -64,7 +64,7 @@ class Note(Schema):
         if 'created' not in meta:
             meta['created'] = datetime.datetime.utcnow()
         if 'updated' not in meta:
-            meta['updated'] = datetime.datetime.utcnow()
+            meta['updated'] = datetime.datetime.utcnow()    
 
         _ = collection.update_one({
             '_id': ObjectId(id_)
@@ -84,6 +84,15 @@ class Note(Schema):
                     'meta.updated': True
                 }
             })
+        if username is not None:
+            _ = collection.update_one({
+                '_id': ObjectId(id_)
+                },
+                {
+                    '$set': {
+                        'username': username
+                    }
+                })
         return id_
 
     @staticmethod
@@ -111,7 +120,8 @@ class Note(Schema):
         indicial_craziness_factorial = {
         'title': 'New Note',
         'meta': {'tags': []},
-        'content': 'begin typing here'
+        'content': 'begin typing here',
+        'username': username
         }
         if 'title' in note_obj:
             indicial_craziness_factorial['title'] = note_obj['title']
