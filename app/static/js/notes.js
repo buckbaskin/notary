@@ -45,12 +45,13 @@ function __notes(oldScope) {
     console.log("view updated");
   };
 
-  $scope.postNoteJSON = function(id_, title, meta, content) {
+  $scope.postNoteJSON = function(id_, title, meta, content, username) {
     var myNote = {
       "_id": id_,
       "title" : title,
       "meta" : meta,
-      "content" : content
+      "content" : content,
+      "username": username
     };
     var myData = {
       "atoken": [$scope.username, $scope.authToken],
@@ -222,7 +223,7 @@ function __notes(oldScope) {
     var meta = $scope.stringToMeta(metaStr);
     var count = document.getElementById("note-content").innerHTML;
 
-    $scope.postNoteJSON($scope.id_, title, meta, count);
+    $scope.postNoteJSON($scope.id_, title, meta, count, $scope.username);
     $scope.updateListItem($scope.id_, title, meta, count);
     $scope.displaySaved();
     $scope.syncNotes();
