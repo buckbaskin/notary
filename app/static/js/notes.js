@@ -255,6 +255,33 @@ function __notes(oldScope) {
     $scope.syncNotes();
   };
 
+  $scope.copyLiveNote = function() {
+    if ($scope.title.length > 0) {
+      var data = { 
+        "atoken": [$scope.username, $scope.authToken],
+        "action": "create",
+        "notes": [
+        {
+          "username": $scope.username,
+          "title": $scope.title+" copy",
+          "meta": $scope.meta,
+          "content": $scope.content,
+        }
+        ],
+      };
+      var myJson = JSON.stringify(data);
+      
+      $scope.request("POST", "json", "/n.json", function(res) {
+        if (res.readyState === 4 && res.status === 200) {
+          $scope.syncNotes();
+          console.log("copied note.");
+        }
+      }, myJson);
+    } else {
+      console.log('Please add a note title');
+    }
+  };
+
   $scope.loadNote = function(newId) {
     $scope.syncNotes();
     if ($scope.sortBy !== undefined) {

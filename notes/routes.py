@@ -70,7 +70,7 @@ def create_notes(content):
     new_ids = []
     for obj in note_objects:
         new_ids.append(Note.create_from_object(obj, username))
-    return map(get_note, new_ids)
+    return json.dumps(list(map(get_note, new_ids)))
 
 # @analytics.trace
 # def create_note():
@@ -114,7 +114,10 @@ def get_notes(content):
 
     notes = []
     for note in cursor:
-        notes.append(clean_note_for_json(note))
+        try:
+            notes.append(clean_note_for_json(note))
+        except AttributeError:
+            pass
 
     print('notesl '+str(len(notes)))
     return json.dumps(notes)
@@ -153,6 +156,7 @@ def clean_note_for_json(note):
     if isinstance(note['meta'], (dict,)):
         if 'updated' in note['meta']:
             if not isinstance(note['meta']['updated'], str):
+                print('note meta updated: ', note['meta']['updated'])
                 note['meta']['updated'] = note['meta']['updated'].isoformat()
         if 'created' in note['meta']:
             if not isinstance(note['meta']['created'], str):

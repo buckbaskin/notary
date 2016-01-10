@@ -130,6 +130,11 @@ class Note(Schema):
         if 'content' in note_obj:
             indicial_craziness_factorial['content'] = note_obj['content']
         print('create_from_object 3')
+
+        indicial_craziness_factorial['meta']['created'] = datetime.datetime.utcnow()
+        indicial_craziness_factorial['meta']['updated'] = datetime.datetime.utcnow()
+        indicial_craziness_factorial['meta']['due_date'] = None
+
         result = collection.insert_one( indicial_craziness_factorial )
         id_ = result.inserted_id
         print('create_from_object 2 id')
