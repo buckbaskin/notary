@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+    <style>
+    
+    </style>
+    <script src="{{ url_for('static', filename='js/user.js') }}"></script>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+        {% if vm['message'] or not vm['user'] %}
+        {{vm['message']}}
+        {% else %}
+        <h1>Your User Profile</h1>
+        <h2>Username: {{vm['user']['username']}}</h2>
+        <h3>User ID: {{vm['user']['uuid']}}</h3>
+        <div class="row">
+            <div class="col-md-6">
+                Created: {{vm['user']['created']}}
+            </div>
+            <div class="col-md-6">
+                Last Login: {{vm['user']['logged_in']}}
+            </div>
+        </div>
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

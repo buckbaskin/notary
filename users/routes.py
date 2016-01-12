@@ -1,5 +1,5 @@
 from app import server
-from flask import render_template
+from flask import render_template, redirect, url_for
 from flask import request
 
 import json
@@ -17,6 +17,7 @@ def login_page():
     def get_login_html():
         vm = {}
         vm['title'] = 'Login to Notary'
+        vm['redirect'] = request.args.get('redirect')
         return render_template('login.html', vm=vm)
     return get_login_html()
 
@@ -26,7 +27,23 @@ def profile_page():
     def get_profile_html():
         vm = {}
         vm['title'] = 'Your Profile'
-        return render_template('user.html', vm=vm)
+        if 'atoken' in request.cookies and 'username' in request.cookies:
+            authToken = request.cookies['atoken']
+            username = request.cookies['username']
+            if not LoginToken.check_token(username, authToken):
+                return redirect(url_for('login_page'))
+
+            user = User.get_by_username(username)
+            if user is not None:
+                vm['user'] = {}
+                vm['user']['username'] = user['username']
+                vm['user']['uuid'] = user['_id']
+                vm['user']['created'] = user['meta']['created'].strftime('%b %d, %Y at %H:%M:%S')
+                vm['user']['logged_in'] = user['meta']['logged_in'].strftime('%b %d, %Y at %H:%M:%S')
+                print(user)
+            else:
+                vm['message'] = 'No profile for this user'
+        return render_template('profile.html', vm=vm)
     return get_profile_html()
 
 @server.route('/u.json', methods=['POST'])

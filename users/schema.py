@@ -91,6 +91,22 @@ class User(Schema):
         return id_
 
     @staticmethod
+    def update_login(username):
+        collection = getattr(database, User.collection)
+        user = User.get_by_username(username)
+        if user is None:
+            return
+        _ =  collection.update_one({
+            '_id': ObjectId(user['_id'])
+            },
+            {
+                '$currentDate': {
+                    'meta.logged_in': True
+                }
+            })
+        print('user time', User.get_by_username(username))
+
+    @staticmethod
     def get_by_username(username):
         collection = getattr(database, User.collection)
         cursor = collection.find({'username': username})
@@ -147,6 +163,7 @@ class LoginToken(Schema):
         _ = collection.insert_one(
             LoginToken.to_mongo(username, token, datetime.datetime.utcnow())
         )
+        User.update_login(username)
         return token
 
     @staticmethod
