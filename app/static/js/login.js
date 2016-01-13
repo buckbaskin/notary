@@ -9,7 +9,7 @@ function __login(oldScope) {
     "id=\"confirm-password\" placeholder=\"confirm password\" "+
     "onblur=\"$scope.checkConfirmMatch();\">");
 
-  $scope.sendLogin = function() {
+  $scope.sendLogin = function(redir) {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
     console.log(username, password);
@@ -36,8 +36,8 @@ function __login(oldScope) {
             // document.cookie = 'username='+$scope.username;
             // document.cookie = 'atoken='+$scope.authToken;
             console.log("doco cookie", document.cookie);
-            console.log('winwinwin', 'http://localhost:5000/notes');
-            window.location = 'http://localhost:5000/notes';
+            console.log('winwinwin', redir);
+            window.location = redir;
           } else {
             document.getElementById("password").value = "";
             document.getElementById("message").innerHTML = "Invalid username or password";

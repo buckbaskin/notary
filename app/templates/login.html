@@ -19,7 +19,11 @@
 					<input type="password" class="form-control" id="confirm-password" placeholder="confirm password" onblur="$scope.checkConfirmMatch();">
 				</div>
 				<div class="col-md-6">
-					<input type="button" class="btn btn-default my-btn" value="Login" onclick="$scope.sendLogin();">
+					{% if vm['redirect'] %}
+					<input type="button" class="btn btn-default my-btn" value="Login" onclick="$scope.sendLogin( 'http://localhost:5000/' + '{{ vm['redirect'] }}' );">
+					{% else %}
+					<input type="button" class="btn btn-default my-btn" value="Login" onclick="$scope.sendLogin( 'http://localhost:5000/notes' );">
+					{% endif %}
 				</div>
 				<div class="col-md-6">
 					<input type="button" class="btn btn-default my-btn" value="Create User" onclick="$scope.createUser();">

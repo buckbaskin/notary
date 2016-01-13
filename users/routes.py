@@ -58,7 +58,7 @@ def profile_page():
             authToken = request.cookies['atoken']
             username = request.cookies['username']
             if not LoginToken.check_token(username, authToken):
-                return redirect(url_for('login_page'))
+                return redirect('http://localhost:5000/login?redirect=profile')
 
             user = User.get_by_username(username)
             if user is not None:
@@ -69,7 +69,6 @@ def profile_page():
                     .strftime('%b %d, %Y at %H:%M:%S'))
                 vm['user']['logged_in'] = (user['meta']['logged_in']
                     .strftime('%b %d, %Y at %H:%M:%S'))
-                print(user)
             else:
                 vm['message'] = 'No profile for this user'
         return render_template('profile.html', vm=vm)
