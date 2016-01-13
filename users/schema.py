@@ -110,7 +110,6 @@ class User(Schema):
                     'meta.logged_in': True
                 }
             })
-        print('user time', User.get_by_username(username))
 
     @staticmethod
     def get_by_username(username):

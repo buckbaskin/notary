@@ -24,7 +24,7 @@ function __login(oldScope) {
 
       var myJson = JSON.stringify(myRequest);
 
-      $scope.request("POST", "json", "/u.json", function(res) {
+      $scope.request("POST", "json", "/login", function(res) {
         if (res.readyState === 4 && res.status === 200) {
           var response = JSON.parse( res.responseText );
           console.log('login res', response);

@@ -23,6 +23,31 @@ def login_page():
         return render_template('login.html', vm=vm)
     return get_login_html()
 
+@server.route('/login', methods=['POST'])
+def login_post():
+    if 'uuid' not in request.cookies:
+        uuid = User.generate_uuid()
+    else:
+        uuid = request.cookies['uuid']
+    content = request.get_json()
+    
+    @analytics.trace
+    def login_action():
+        if User.check_password(content['username'], content['password']):
+            token = LoginToken.create_one(content['username'])
+            response = make_response(json.dumps(token))
+
+            response.set_cookie('username', content['username'])
+            response.set_cookie('atoken', token)
+            response.set_cookie('uuid', uuid)
+            response.set_cookie('path', '/')
+            response.set_cookie('domain', '')
+            print('response set all cookies')
+            return json.dumps(token)
+        else:
+            return json.dumps({'error': 'invalid login'})
+    return login_action()
+
 @server.route('/profile', methods=['GET'])
 def profile_page():
     @analytics.trace
@@ -73,6 +98,7 @@ def users_api():
                 response.set_cookie('atoken', token)
                 response.set_cookie('uuid', uuid)
                 response.set_cookie('path', '/')
+                response.set_cookie('domain', '')
                 return json.dumps(token)
             else:
                 json.dumps({'error': 'invalid login'})

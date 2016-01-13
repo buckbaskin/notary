@@ -65,7 +65,7 @@ function __notes(oldScope) {
         var fromJSON = JSON.parse( res.responseText );
         if (fromJSON.redirect !== undefined) {
           console.log('redirect...')
-          window.location = fromJSON.redirect;
+          // window.location = fromJSON.redirect;
         }
         $scope.id_ = fromJSON._id;
         $scope.title = fromJSON.title;
@@ -165,7 +165,7 @@ function __notes(oldScope) {
         var response = JSON.parse( res.responseText );
         if (response.redirect !== undefined) {
           console.log('redirect...')
-          window.location = response.redirect;
+          // window.location = response.redirect;
         }
         if (response.response !== "success") {
           console.log("sync push error");
@@ -322,7 +322,7 @@ function __notes(oldScope) {
       }
     }, myJson);
   };
-
+  console.log('cookie crisp', document.cookie);
   $scope.try_cookie();
 }
 
