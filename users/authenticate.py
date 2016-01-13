@@ -1,5 +1,7 @@
 from db import User, LoginToken
 
+# pylint: disable=superfluous-parens
+
 def check_login(content):
     if 'action' not in content or not content['action'] == 'login':
         raise AuthError()

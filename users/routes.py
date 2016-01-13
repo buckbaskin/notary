@@ -9,6 +9,8 @@ import analytics
 from users.authenticate import check_auth, AuthError
 from db import User, LoginToken
 
+# pylint: disable=superfluous-parens
+
 ##### Users #####
 
 @server.route('/login', methods=['GET'])
@@ -38,8 +40,10 @@ def profile_page():
                 vm['user'] = {}
                 vm['user']['username'] = user['username']
                 vm['user']['uuid'] = user['_id']
-                vm['user']['created'] = user['meta']['created'].strftime('%b %d, %Y at %H:%M:%S')
-                vm['user']['logged_in'] = user['meta']['logged_in'].strftime('%b %d, %Y at %H:%M:%S')
+                vm['user']['created'] = (user['meta']['created']
+                    .strftime('%b %d, %Y at %H:%M:%S'))
+                vm['user']['logged_in'] = (user['meta']['logged_in']
+                    .strftime('%b %d, %Y at %H:%M:%S'))
                 print(user)
             else:
                 vm['message'] = 'No profile for this user'
@@ -65,7 +69,6 @@ def users_api():
                 token = LoginToken.create_one(content['username'])
                 response = make_response(json.dumps(token))
 
-                print('setting username, token in login', content['username'], token)
                 response.set_cookie('username', content['username'])
                 response.set_cookie('atoken', token)
                 response.set_cookie('uuid', uuid)
@@ -77,15 +80,16 @@ def users_api():
             # raises a Validation error if the request isn't authorized
             if 'username' in request.cookies and 'atoken' in request.cookies:
                 request.cookies['action'] = 'login'
-                check_auth(request.cookies)
+                check_auth(request.cookies['username'], 
+                    request.cookies['atoken'])
                 username = request.cookies['username']
             else:
-                check_auth(content)
+                check_auth(content['username'], content['atoken'])
                 username = content['username']
         except AuthError:
             print('AuthError, invalid credentials')
             return json.dumps({'error': 'invalid credentials'})
-        
+
         response = make_response(select_operation(content))
         response.set_cookie('uuid', uuid)
         response.set_cookie('username', username)
@@ -99,7 +103,7 @@ def select_operation(content):
     print('select operation action')
     if content['action'] == 'create':
         return User.create_one(content['username'], content['password'])
-    # TODO(buckbaskin): implement the rest of the API here
+    # TODO(buckbaskin): implement the rest of the user API here
     elif content['action'] == 'login':
         print('login action')
         if User.check_password(content['username'], content['password']):

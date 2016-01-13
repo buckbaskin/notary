@@ -5,6 +5,8 @@ import random
 import datetime
 import json
 
+# pylint: disable=superfluous-parens
+
 database.user.create_index('username')
 
 class User(Schema):
@@ -30,8 +32,6 @@ class User(Schema):
 
         if password is not None:
             # on create
-            # TODO(buckbaskin): do something other than plain text
-            # validate then hash the password
             newm['password_hash'] = generate_password_hash(password)
 
         return newm
@@ -43,8 +43,6 @@ class User(Schema):
             'created': datetime.datetime.utcnow()
             })
         return str(result.inserted_id)
-
-# TODO(buckbaskin): Start here, finish User Schema from example Notes schema
 
     @staticmethod
     def get_all(sort=None):
@@ -104,7 +102,7 @@ class User(Schema):
         user = User.get_by_username(username)
         if user is None:
             return
-        _ =  collection.update_one({
+        _ = collection.update_one({
             '_id': ObjectId(user['_id'])
             },
             {
@@ -178,7 +176,7 @@ class LoginToken(Schema):
     def check_token(username, token):
         collection = getattr(database, LoginToken.collection)
         cursor = collection.find({'username': username, 'token': token})
-        for token in cursor:        
+        for token in cursor:
 
             time_delta = datetime.datetime.utcnow() - token['created']
             if time_delta.total_seconds() < 300:
