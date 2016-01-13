@@ -33,9 +33,9 @@ function __login(oldScope) {
             console.log(response);
             $scope.authToken = response;
             $scope.username = username;
-            document.cookie = 'username='+$scope.username;
-            document.cookie = 'atoken='+$scope.authToken;
-            console.log(document.cookie);
+            // document.cookie = 'username='+$scope.username;
+            // document.cookie = 'atoken='+$scope.authToken;
+            console.log("doco cookie", document.cookie);
             console.log('winwinwin', 'http://localhost:5000/notes');
             window.location = 'http://localhost:5000/notes';
           } else {

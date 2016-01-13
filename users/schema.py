@@ -36,6 +36,14 @@ class User(Schema):
 
         return newm
 
+    @staticmethod
+    def generate_uuid():
+        collection = getattr(database, 'user-uuid')
+        result = collection.insert_one({
+            'created': datetime.datetime.utcnow()
+            })
+        return str(result.inserted_id)
+
 # TODO(buckbaskin): Start here, finish User Schema from example Notes schema
 
     @staticmethod
@@ -170,7 +178,8 @@ class LoginToken(Schema):
     def check_token(username, token):
         collection = getattr(database, LoginToken.collection)
         cursor = collection.find({'username': username, 'token': token})
-        for token in cursor:
+        for token in cursor:        
+
             time_delta = datetime.datetime.utcnow() - token['created']
             if time_delta.total_seconds() < 300:
                 return True

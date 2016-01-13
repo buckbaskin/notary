@@ -1,6 +1,6 @@
 from app import server
 from flask import render_template, redirect, url_for
-from flask import request
+from flask import request, make_response
 
 import json
 
@@ -48,6 +48,11 @@ def profile_page():
 
 @server.route('/u.json', methods=['POST'])
 def users_api():
+    if 'uuid' not in request.cookies:
+        uuid = User.generate_uuid()
+    else:
+        uuid = request.cookies['uuid']
+
     @analytics.trace
     def operate_users():
         content = request.get_json()
@@ -58,16 +63,34 @@ def users_api():
             print('login action')
             if User.check_password(content['username'], content['password']):
                 token = LoginToken.create_one(content['username'])
+                response = make_response(json.dumps(token))
+
+                print('setting username, token in login', content['username'], token)
+                response.set_cookie('username', content['username'])
+                response.set_cookie('atoken', token)
+                response.set_cookie('uuid', uuid)
+                response.set_cookie('path', '/')
                 return json.dumps(token)
             else:
                 json.dumps({'error': 'invalid login'})
         try:
             # raises a Validation error if the request isn't authorized
-            check_auth(content)
+            if 'username' in request.cookies and 'atoken' in request.cookies:
+                request.cookies['action'] = 'login'
+                check_auth(request.cookies)
+                username = request.cookies['username']
+            else:
+                check_auth(content)
+                username = content['username']
         except AuthError:
             print('AuthError, invalid credentials')
             return json.dumps({'error': 'invalid credentials'})
-        return select_operation(content)
+        
+        response = make_response(select_operation(content))
+        response.set_cookie('uuid', uuid)
+        response.set_cookie('username', username)
+        response.set_cookie('atoken', LoginToken.create_one(username))
+        return response
     return operate_users()
 
 ###

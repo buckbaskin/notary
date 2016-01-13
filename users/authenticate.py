@@ -7,10 +7,10 @@ def check_login(content):
         raise AuthError()
     return User.check_password(content['username'], content['password'])
 
-def check_auth(content):
-    if 'atoken' not in content:
+def check_auth(username, atoken):
+    if atoken is None or username is None:
         raise AuthError()
-    elif not LoginToken.check_token(*content['atoken']):
+    elif not LoginToken.check_token(username, atoken):
         print('login token did not match')
         raise AuthError()
     return True

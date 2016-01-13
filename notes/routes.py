@@ -1,14 +1,14 @@
 # pylint: disable=superfluous-parens
 from app import server
 from flask import render_template, redirect, url_for
-from flask import request
+from flask import request, make_response
 
 import json
 import dateutil.parser as dateparser
 
 import analytics
 
-from db import Note
+from db import Note, User, LoginToken
 
 from users.authenticate import check_auth, AuthError
 
@@ -34,8 +34,20 @@ def notes_api():
     def operate_notes():
         content = request.get_json()
         try:
-            # raises a Validation error if the request isn't authorized
-            check_auth(content)
+            # raises a AuthError if the request isn't authorized
+            if 'username' in request.cookies and 'atoken' in request.cookies:
+                print('auth with cookie', request.cookies['username'], request.cookies['atoken'])
+                check_auth(request.cookies['username'], request.cookies['atoken'])
+                username = request.cookies['username']
+            else:
+                print('contento', content)
+                check_auth(content['username'], content['atoken'])
+                username = content['username']
+
+            if 'uuid' in request.cookies:
+                uuid = request.cookies['uuid']
+            else:
+                uuid = User.generate_uuid()
         except AuthError:
             print('Auth Error, redirect to login')
             return json.dumps({'redirect': 'http://localhost:5000/login'})
@@ -46,19 +58,26 @@ def notes_api():
         else:
             if content['action'] == 'create':
                 print('create action')
-                return create_notes(content)
+                res_text = create_notes(content)
             elif len(content['action']) >= 4 and content['action'][:4] == 'read':
                 print('select_read action')
-                return select_read(content)
+                res_text = select_read(content)
             elif content['action'] == 'update':
                 print('update action')
-                return update_notes(content)
+                res_text = update_notes(content)
             elif content['action'] == 'delete':
                 print('delete action')
-                return delete_notes(content)
+                res_text = delete_notes(content)
             else:
                 print('request did not match API')
                 return ''
+            response = make_response(res_text)
+            print('setting uuid, username, token')
+            response.set_cookie('uuid', uuid)
+            response.set_cookie('username', username)
+            response.set_cookie('atoken', LoginToken.create_one(username))
+            response.set_cookie('path', '/')
+            return response
     return operate_notes()
 
 ###
