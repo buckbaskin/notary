@@ -43,7 +43,7 @@ def login_post():
             response.set_cookie('path', '/')
             response.set_cookie('domain', '')
             print('response set all cookies')
-            return json.dumps(token)
+            return response
         else:
             return json.dumps({'error': 'invalid login'})
     return login_action()
