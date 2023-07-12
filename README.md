@@ -1,3 +1,7 @@
+This project is now archived and not maintained. Even more so than the usual MIT License:
+
+THE SOFTWARE IS **ARCHIVED AND NOT MAINTAINED** “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
 # notary
 Evernote clone based on a Flask/Python back end
 
